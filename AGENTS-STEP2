@@ -1,0 +1,96 @@
+╔══════════════════════════════════════════════════════════╗
+║  AGENTS-STEP2 — v2: Fix Tool Routing & Arg Accuracy    ║
+║  (Second Optimization Round)                           ║
+╚══════════════════════════════════════════════════════════╝
+
+CONTEXT:
+  v1 has been run. Read v1 run JSON to see remaining failures.
+  This round fix is in artifacts/tools.yaml ONLY.
+  (Do NOT change system_prompt.md in this round.)
+
+========================================================================
+STEP 0 — INSPECT v1 EVIDENCE
+========================================================================
+
+1. Find the latest v1 run JSON:
+   Get-ChildItem runs/*v1*.json | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+
+2. Read the run JSON. Check for remaining failures in:
+   - R01: timeline — did agent map "Sam Altman" → handle "sama"?
+   - R02: social_search — did agent pick social_search over timeline?
+   - R03: lookup — did agent pick lookup with topic=news, timeframe=day?
+   - R04: fetch — did agent pick fetch for a given URL?
+   - R05: limit=10 arg — correct?
+   - R06: timeframe=week arg — correct?
+   - R07: search_type=Top arg — correct?
+   - R13: parallel calls — two tool calls?
+   - M01-M06: multi-turn accuracy
+
+3. Form hypothesis about remaining routing/arg failures.
+   Likely issues:
+   - tool descriptions are vague (e.g., "Lấy các bài đăng gần đây" vs "Lấy bài đăng của một người dùng cụ thể")
+   - No name→handle mapping guidance in tools.yaml
+   - No arg conventions (defaults, when to use which enum value)
+   - No guidance on when to use which tool
+
+========================================================================
+STEP 1 — FIX tools.yaml (ONLY this file)
+========================================================================
+
+Improve each tool description in artifacts/tools.yaml:
+
+a) timeline:
+   - Description: "Lấy bài đăng Twitter/X gần đây của MỘT người dùng cụ thể. Dùng khi user yêu cầu tweet/post CỦA một người (vd 'tweet của Sam Altman'). KHÔNG dùng để tìm tweet theo chủ đề."
+   - Parameter screenname description: "Twitter handle. Map tên tiếng Việt: 'Sam Altman'→'sama', 'Elon Musk'→'elonmusk', 'Andrej Karpathy'→'karpathy'"
+
+b) social_search:
+   - Description: "Tìm bài đăng Twitter/X theo chủ đề/từ khóa. Dùng khi user muốn biết 'mọi người đang nói gì về X'. KHÔNG dùng để lấy tweet của một người cụ thể."
+   - Parameter search_type: clarify enum usage: "Top=tweet phổ biến nhất; Latest=mới nhất"
+
+c) lookup:
+   - Description: "Tra cứu thông tin/kết quả tìm kiếm trên web. Dùng cho tin tức, bài viết web. KHÔNG dùng cho Twitter."
+   - Parameter topic: "news=tin tức thời sự; general=thông tin tổng hợp"
+   - Parameter timeframe: "day=hôm nay; week=tuần này; month=tháng này; year=năm nay"
+
+d) fetch:
+   - Description: "Đọc/trích nội dung từ một URL cụ thể. Dùng khi user cung cấp link chi tiết. KHÔNG dùng để tìm kiếm."
+
+e) format:
+   - Description: "Trình bày các item đã thu thập thành markdown digest."
+
+f) clarify:
+   - Description: "HỎI LẠI người dùng khi thiếu thông tin bắt buộc (handle, URL) hoặc cần xác nhận trước hành động nhạy cảm (gửi/đăng bài)."
+
+g) send:
+   - Description: "Gửi văn bản lên Telegram. LUÔN gọi clarify(response_type=yes_no) trước khi gửi để xác nhận."
+
+========================================================================
+STEP 2 — RUN v2 EVAL
+========================================================================
+
+python run_eval.py --provider openrouter --version v2 --suite base --eval-cases data/eval_base.json
+
+Check:
+- provider_error_cases == 0
+- measured_cases == total_cases
+- Compare metric values with v1
+
+========================================================================
+STEP 3 — FILL version_log.csv
+========================================================================
+
+Append row:
+  version=v2
+  author=<your_name_or_team>
+  changed_artifact=tools.yaml
+  artifact_version=v2
+  prompt_hash=<hash>
+  tools_hash=<hash>
+  reason=<brief_why_you_changed_it>
+  hypothesis=<your_hypothesis>
+  metric_name=case_accuracy
+  metric_before=<v1_value>
+  metric_after=<v2_value>
+  run_file=runs/<v2_run_filename>
+
+Return: the v2 accuracy numbers and the run filename.

@@ -1,0 +1,63 @@
+{
+  "transcript_id": "v0_20260729T161752",
+  "artifact_version": "v0+pc4b59cc47567+t9d0da383669f",
+  "created_at": "2026-07-29T16:25:40.385039",
+  "updated_at": "2026-07-29T16:25:40.385046",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-07-29T16:25:40.385048",
+      "user": "Bách",
+      "status": "answered",
+      "assistant_text": "Bạn có thể cung cấp thêm thông tin về 'Bách'? Ví dụ: bạn muốn tìm tin tức, tweet, hoặc thông tin về ai/những gì cụ thể?",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "clarify",
+              "args": {
+                "response_type": "text",
+                "question": "Bạn có thể cung cấp thêm thông tin về 'Bách'? Ví dụ: bạn muốn tìm tin tức, tweet, hoặc thông tin về ai/những gì cụ thể?"
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "clarify",
+              "args": {
+                "response_type": "text",
+                "question": "Bạn có thể cung cấp thêm thông tin về 'Bách'? Ví dụ: bạn muốn tìm tin tức, tweet, hoặc thông tin về ai/những gì cụ thể?"
+              },
+              "result": {
+                "tool": "ask_user",
+                "question": "Bạn có thể cung cấp thêm thông tin về 'Bách'? Ví dụ: bạn muốn tìm tin tức, tweet, hoặc thông tin về ai/những gì cụ thể?",
+                "response_type": "text",
+                "options": [],
+                "awaiting_user": true
+              }
+            }
+          ]
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "clarify",
+          "args": {
+            "response_type": "text",
+            "question": "Bạn có thể cung cấp thêm thông tin về 'Bách'? Ví dụ: bạn muốn tìm tin tức, tweet, hoặc thông tin về ai/những gì cụ thể?"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có thể cung cấp thêm thông tin về 'Bách'? Ví dụ: bạn muốn tìm tin tức, tweet, hoặc thông tin về ai/những gì cụ thể?",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ],
+      "ended_at": "2026-07-29T16:25:40.385049"
+    }
+  ]
+}

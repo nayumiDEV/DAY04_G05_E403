@@ -1,0 +1,1021 @@
+{
+  "run_id": "v3_B_group_openrouter_20260729T153652160145",
+  "version": "v3",
+  "artifact_version": "v3+pc4b59cc47567+t9d0da383669f",
+  "prompt_hash": "c4b59cc4756700548190ca080f02a87489d11f0c5d50a863e53200783959c8b3",
+  "tools_hash": "9d0da383669f9ca5d608a1b69f164af39fa128e6814781af0e85633b55734379",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\nayum\\Works\\learn\\AI20K_Day04\\Day04-C401-Prompt-Engineering-Tool-Calling-Labs-student-k4\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\nayum\\Works\\learn\\AI20K_Day04\\Day04-C401-Prompt-Engineering-Tool-Calling-Labs-student-k4\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "10 team-authored eval cases: 5 single-turn + 5 multi-turn. Tests new tools, edge cases, and scenarios not covered by base eval.",
+  "generated_at": "2026-07-29T15:36:52",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 7,
+    "case_accuracy": 0.7,
+    "tool_routing_accuracy": 0.7,
+    "argument_accuracy": 0.7,
+    "multiturn_accuracy": 0.8,
+    "failure_counts": {
+      "wrong_tool": 3
+    },
+    "observed_mismatch_counts": {
+      "missing_tool_call": 3
+    }
+  },
+  "results": [
+    {
+      "id": "G01_weather_query",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Weather query for a specific city → weather tool, not lookup."
+      },
+      "input": "Thời tiết hôm nay ở Hà Nội thế nào?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hanoi"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hanoi"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Hanoi"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Hanoi",
+            "temperature": "32°C",
+            "feels_like": "37°C",
+            "description": "Light rain shower",
+            "humidity": "63%",
+            "wind_speed": "16 km/h",
+            "summary": "Weather in Hanoi: Light rain shower, 32°C, feels like 37°C."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_summarize_long_text",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "User provides long text and asks for summary → summarize tool."
+      },
+      "input": "Tóm tắt đoạn văn sau: AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems. OpenAI and Google both launched new versions of their flagship models. Key developments included improved reasoning capabilities and better tool use.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "summarize",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "summarize",
+            "args": {
+              "text": "AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems. OpenAI and Google both launched new versions of their flagship models. Key developments included improved reasoning capabilities and better tool use.",
+              "max_points": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "summarize",
+          "args": {
+            "text": "AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems. OpenAI and Google both launched new versions of their flagship models. Key developments included improved reasoning capabilities and better tool use.",
+            "max_points": 5
+          },
+          "result": {
+            "tool": "extract_key_points",
+            "input_length": 265,
+            "key_points": [
+              "AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems.",
+              "Key developments included improved reasoning capabilities and better tool use.",
+              "OpenAI and Google both launched new versions of their flagship models."
+            ],
+            "keywords": [
+              "advances",
+              "better",
+              "both",
+              "capabilities",
+              "capable",
+              "companies",
+              "developments",
+              "flagship",
+              "google",
+              "improved"
+            ],
+            "point_count": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_newsletter_with_items",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "User requests newsletter with items already listed → newsletter tool."
+      },
+      "input": "Làm bản tin AI hôm nay với các tin tôi đã tìm được: bài về GPT-5 từ OpenAI và bài về Claude 4 từ Anthropic.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "newsletter",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "GPT-5 OpenAI",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 5
+            }
+          },
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Claude 4 Anthropic",
+              "topic": "news",
+              "timeframe": "day",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "missing tool call newsletter",
+          "extra tool call lookup",
+          "extra tool call lookup"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "GPT-5 OpenAI",
+            "topic": "news",
+            "timeframe": "day",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "GPT-5 OpenAI",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "AI Chatbots Know How to Make Deadly Biological Weapons. Some Will Teach You. - tovima.com",
+                "url": "https://www.tovima.com/wsj/ai-chatbots-know-how-to-make-deadly-biological-weapons-some-will-teach-you/amp",
+                "source": "tovima.com",
+                "summary": "Early this year, OpenAI cut ties with Beiermeister on the grounds of sexual discrimination, which she has disputed .\n\nSoon after OpenAI released the new model, employees found GPT-5 helping users who asked about making poisons and biological weapons. Later in the fall, OpenAI changed the designation of GPT-5, classifying it as less dangerous.\n\nWrite to Georgia Wells at georgia.wells@wsj.com and Amrith Ramkumar at amrith.ramkumar@wsj.com\n\n AI\n OpenAI\n weapons [...] Some employees feared the team’s detection tool wasn’t comprehensive, according to people familiar with the concerns. The company said it continued to refine the tool. OpenAI has monitored 100% of user queries for its advanced models since April 2025, according to the spokeswoman.\n\nShe said GPT-5 launched after it was trained not to provide information that could cause harm. The company offers a $50,000 bounty for users who can show they evaded certain safeguards regarding biological weapons. [...] That summer, as OpenAI prepared to release GPT-5, employees determined the chatbot had hit a high-risk mark, defined by the company as ChatGPT successfully aiding a user with limited training to create a biological hazard.",
+                "score": 0.7507177
+              },
+              {
+                "title": "Microsoft's new AI model beats Mythos on security benchmark",
+                "url": "https://www.zdnet.com/article/ai-model-release-tracker",
+                "source": "zdnet.com",
+                "summary": "## GPT-5.5 Instant\n\nOpenAI | May 5, 2026\n\nWhat it does: OpenAI said in its announcement that the lighter version of OpenAI's just-released GPT-5.5 is less verbose than its predecessor, GPT-5.3 Instant. It also touted fewer hallucinations and improved factuality, saying \"GPT‑5.5 Instant produced 52.5% fewer hallucinated claims than GPT‑5.3 Instant on high-stakes prompts covering areas like medicine, law, and finance.\" [...] What it does: Fresh on the heels of its new voice model, OpenAI released the GPT-5.6 family, which the company said it cleared with the government a few days earlier. The family includes Sol, a new flagship model, as well as Terra, built for everyday use, and Luna, the economical choice of the three. OpenAI said Sol should optimize cost without sacrificing performance, and works with a new \"ultra\" setting that calls on several agents to speed up task completion. [...] For now, just a few weeks into its release, Mythos is helping catch software bugs in droves.\n\n## GPT-5.4\n\nOpenAI | March 5, 2026\n\nWhat it does: OpenAI framed this new model, released barely three months after GPT-5.2, as specifically designed for professional work. According to the company's own testing (which should always be taken with a grain of salt until verified by a third party), GPT-5.4 matches or outperforms human professionals 83% of the time.",
+                "score": 0.6102915
+              },
+              {
+                "title": "GPT-6 Clues are Piling up After an Unreleased OpenAI Model ...",
+                "url": "https://www.trendingtopics.eu/gpt-6-clues-are-piling-up-after-an-unreleased-openai-model-hacked-hugging-face",
+                "source": "trendingtopics.eu",
+                "summary": "Some perspective on the timing: the last jump to a new major version number is almost a year old. GPT-5 arrived on August 7, 2025, roughly twelve months ago. Everything since has been an intermediate step – most recently GPT-5.6 with the Sol, Terra and Luna models. If GPT-6 does indeed land in September, the gap between the two major versions would be about a year and a month. [...] The background reaches back into June, when the US government asked OpenAI to make GPT-5.6 available only to a small circle of government-vetted partners at first – according to Axios, the first time Washington had pre-emptively restricted the release of a model. Altman noted internally that this was not the company’s preferred approach. Anthropic, for its part, had to temporarily shut down Fable 5 and Mythos 5 following a directive from the US Department of Commerce. [...] The direction of travel is easier to guess. GPT-5.6 already coordinates multiple agents, operates software and handles longer professional assignments, and OpenAI is working on memory that carries preferences and projects across conversations. A successor is likely to be less chatbot and more autonomous coworker. Whether regulators clear the path quickly after the Hugging Face incident is the question that actually remains open.\n\nRank My Startup: Erobere die Liga der Top Founder!",
+                "score": 0.6097339
+              },
+              {
+                "title": "Prompting Opus 5 and Embracing Level 5 AI",
+                "url": "https://patmcguinness.substack.com/p/prompting-opus-5-and-embracing-level",
+                "source": "patmcguinness.substack.com",
+                "summary": "The AI safety freakout: A more-powerful-than-ever model like Mythos 5 comes out, and AI doomers worry that the end is nigh with “AI will kill us all” narratives. With Mythos 5 and Fable 5, the freakout became actionable when the Government blocked Fable 5 from non-US users getting and Anthropic took it off the market. Three weeks later, it was back on the market. Then OpenAI and Anthropic released GPT-5.6 and Claude Opus 5 respectively while tamping down fears by claiming improved guardrails on [...] These days my go-to harness for code development is Claude Code. I use OpenAI’s ChatGPT with Codex and Work for other tasks. These harnesses are growing with the AI models. [...] AI can do more than ever before. GPT-5.6 Sol, Fable 5, Claude Opus 5, and Kimi K3 are more intelligent than any prior AI models. Today’s frontier AI models can act as a project collaborator, decomposing large objectives into specialized sub-agents, coordinating their work, monitoring progress, revising plans, and producing integrated results with relatively little human supervision.",
+                "score": 0.5996498
+              },
+              {
+                "title": "OpenAI's AI agents hacked Hugging Face during G... | Pluang",
+                "url": "https://pluang.com/en/news-feed/agen-openai-hack-hugging-face-dalam-tes-gpt-5-6-sol",
+                "source": "pluang.com",
+                "summary": "During testing of OpenAI's GPT-5.6 Sol and a more advanced unreleased model, OpenAI's autonomous agents reportedly hacked Hugging Face, an AI model-hosting platform. Both companies are investigating this unprecedented cyber incident involving autonomous AI behavior. This event has sparked concerns about AI security and ethics, potentially impacting OpenAI's market valuation and investor confidence. Markets are closely watching for updates on the investigation and any new security measures or [...] FeesSafety\n\n|\n\nHome/News Feed/OpenAI's AI agents hacked Hugging Face during GPT-5.6 testing, raising security and valuation concerns.\n\n# OpenAI's AI agents hacked Hugging Face during GPT-5.6 testing, raising security and valuation concerns.\n\nMarket News\n\n28 Jul 2026\n\n·\n\nCrypto Briefing\n\n·View Source·\n\nBearish\n\npluang ai news",
+                "score": 0.43554196
+              }
+            ]
+          }
+        },
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Claude 4 Anthropic",
+            "topic": "news",
+            "timeframe": "day",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "Claude 4 Anthropic",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "A large amount of private conversations, health records, and company documents belonging to Anthropic's AI 'Claude' were discovered through Google searches. - GIGAZINE",
+                "url": "https://gigazine.net/gsc_news/en/20260729-claude-chats-google-search/",
+                "source": "gigazine.net",
+                "summary": "# A large amount of private conversations, health records, and company documents belonging to Anthropic's AI 'Claude' were discovered through Google searches. A Reddit user reported that entering certain operators into Google search makes it possible to search for chat content and documents created with Anthropic's AI, Claude. Reddit users have reported that entering search operators like 'site:claude.ai/share' into Google brings up a large list of shared conversations. However, the Shared Links feature of ChatGPT, which allowed users to share chats via links, had an experimental option at the time to 'index in search engines.' This option was later removed because it was deemed to have increased the chances of users accidentally sharing unintended content, but the display of shared chats in search results was a feature that OpenAI intended. Anthropic told the media, 'Shared links only appear in search results if the URL is posted in a location that search engines can recognize, such as a forum or social media post.",
+                "score": 0.50065976
+              },
+              {
+                "title": "Here’s what Anthropic found when it turned Mythos loose on encryption algorithms - CyberScoop",
+                "url": "https://cyberscoop.com/anthropic-claude-mythos-encryption-flaws-hawk-aes-pqc/",
+                "source": "cyberscoop.com",
+                "summary": "Claude Mythos exposed mathematical weaknesses in a post-quantum candidate and a simplified version of AES, marking a major breakthrough for AI-driven cryptanalysis. Anthropic researchers used Claude Mythos Preview to find new weaknesses in two cryptographic methods, the company said Tuesday, including one that is being considered by the National Institute of Standards and Technology for both traditional and quantum computing. “The attacks described in these two papers are the strongest attacks we have found to date,” the company wrote in the post. One of the weaknesses found was in HAWK, a digital signature scheme under review by the NIST as part of a search for encryption methods that could survive attacks from quantum computers. The other flaw was found in a weakened version of the Advanced Encryption Standard, or AES, the cipher NIST adopted in 2001 and the most widely used method for scrambling data in transit.",
+                "score": 0.49978086
+              },
+              {
+                "title": "How to keep your Claude chats and Google files private - The Guardian",
+                "url": "https://www.theguardian.com/us-news/2026/jul/28/how-to-keep-your-claude-chats-and-google-files-private",
+                "source": "theguardian.com",
+                "summary": "# How to keep your Claude chats and Google files private. Some ‘private’ chats and docs are showing up on search engines. Users of Anthropic’s Claude chatbot were surprised over the weekend to learn that some of their conversations may be discoverable on search engines like Google and Bing. Anthropic allows Claude users to create public links to their chat threads, which gives anyone with the link the ability to view their conversations – similar to sharing options on apps like Google Docs. But what users may not have realized was that means their Claude conversations, however sensitive or personal, could show up in public search results. The uproar over Claude chats showing up in search results began on Sunday, after Reddit users discovered that typing “site:claude.ai/share” on Google or Bing pulled up chat logs that included personal conversations. Once users create publicly shareable links to their chats, chat logs are public and may become discoverable on search engines.",
+                "score": 0.46584973
+              },
+              {
+                "title": "Private Claude Conversations Have Been Indexed by Search Engines - CNET",
+                "url": "https://www.cnet.com/tech/services-and-software/private-claude-conversations-have-been-indexed-by-search-engines/",
+                "source": "cnet.com",
+                "summary": "Blake has over a decade of experience writing for the web, with a focus on mobile phones, where he covered the smartphone boom of the 2010s and the broader tech scene.… Read full bio. Over the weekend, private Claude AI chats were made publicly accessible by search engines like Google and Bing, making for a privacy nightmare for the people involved and the chatbot’s maker, Anthropic. Initially spotted by Reddit users, the common factor in the problem seems to be that the indexed conversations were shared — a common option within most AI chats — allowing “anyone with the link” to view what had been said in the Claude conversation itself. This feature is apparently not completely protected from web crawlers, and personal conversations, while initially shared by users with people they chose, were exposed for the entire internet to see if one knew where to look. Blake has over a decade of experience writing for the web, with a focus on mobile phones, where he covered the smartphone boom of the 2010s and the broader tech scene.",
+                "score": 0.41435426
+              },
+              {
+                "title": "Claude Chats Popped Up in Google Search Results. How to See If Yours Are Public - PCMag",
+                "url": "https://www.pcmag.com/news/claude-chats-popped-up-in-google-search-results-see-if-yours-are-public",
+                "source": "pcmag.com",
+                "summary": "# Claude Chats Popped Up in Google Search Results. How to See If Yours Are Public. Chats posted online by Claude users briefly appeared in Google search results over the weekend. Here's how to check whether you've shared any chats and revoke access. https://www.pcmag.com/news/claude-chats-popped-up-in-google-search-results-see-if-yours-are-public. Chats with Anthropic's Claude AI were found indexed in Google search, briefly making them easy to find. On Saturday, a Reddit user reported\") that typing \"site:claude.ai/share\" into the Google search box revealed hundreds of Claude chats. OpenAI faced a similar controversy last year when Google indexed shared user chats on ChatGPT that had been created with the public link function. Instead, Anthropic suggested that users who posted links to their shared chats on a forum or social media platform had those chats indexed by Google’s web crawlers. The share function on Claude is optional and lets you create a public link to a chat that anyone can view. Following the controversy, Google and other search engines appeared to stop indexing the shared Claude chats.",
+                "score": 0.39866453
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_compare_provided_items",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "User provides items to compare directly → compare tool, no lookup needed."
+      },
+      "input": "So sánh hai bài báo này: bài thứ nhất 'GPT-5 Launch' từ OpenAI, bài thứ hai 'Claude 4 Release' từ Anthropic.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "compare",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "GPT-5 Launch OpenAI",
+              "topic": "general"
+            }
+          },
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Claude 4 Release Anthropic",
+              "topic": "general"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "missing tool call compare",
+          "extra tool call lookup",
+          "extra tool call lookup"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "GPT-5 Launch OpenAI",
+            "topic": "general"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "GPT-5 Launch OpenAI",
+            "topic": "general",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "How Chat GPT 5 will power the next decade of tech",
+                "url": "https://www.xavor.com/blog/chat-gpt-5",
+                "source": "xavor.com",
+                "summary": "The launch also highlights OpenAI’s push into the enterprise productivity market. Alongside GPT-5.4, the company rolled out ChatGPT for Excel and Google Sheets in beta, as well as integrations with platforms such as FactSet, MSCI, Third Bridge, and Moody’s. These additions show that OpenAI is moving beyond general chatbot functionality toward tools that can support real financial, analytical, and operational work inside organizations. [...] Since the launch of GPT-5, OpenAI has continued to expand the model family with more enterprise-focused upgrades. In March 2026, the company introduced GPT-5.4, which described as its most capable and efficient model for professional work. According to reports, GPT-5.4 combines stronger reasoning, better coding performance, and more advanced agentic abilities, making it suitable for complex business workflows. [...] GPT-3, GPT-4, and now GPT-5 are the latest innovations in OpenAI’s series of advanced and powerful LLMs that can perform many tasks more efficiently and quickly than humans. Chat GPT 5 is a crucial juncture in the history of AI as it has set the tone for future AI technologies with its unified architecture, specialized AI models, and sheer size.\n\nIt is still in its development phase, and the model will only mature with more usage and user feedback.",
+                "score": 0.8055255
+              },
+              {
+                "title": "OpenAI Knew GPT-5 Posed Bioweapon Risk and Downgraded the Rating Anyway",
+                "url": "https://www.techtimes.com/articles/321651/20260727/openai-knew-gpt-5-posed-bioweapon-risk-downgraded-rating-anyway.htm",
+                "source": "techtimes.com",
+                "summary": "The GPT-5 bioweapons episode lands in a documented pattern. In 2024, whistleblowers told the Washington Post that OpenAI compressed the safety testing window for GPT-4 Omni (codenamed Scallion) to a single week in order to meet a May launch date. Employees reported that launch celebrations were planned before safety evaluations had meaningfully begun. \"They planned the launch after-party prior to knowing if it was safe to launch,\" one person familiar with the matter told the Washington Post. [...] OpenAI internally rated GPT-5 as high-risk for biological hazards in summer 2025, documented that the model was helping users generate step-by-step guidance on building biological weapons, and then quietly downgraded that risk classification that fall — without informing the public, notifying law enforcement, or triggering any external oversight mechanism. That is not a summary of what OpenAI failed to do under its own framework. It is a description of the framework operating as designed. [...] The pattern began after OpenAI deployed GPT-5. During the summer of 2025, the company's testers determined internally that the model could provide people with limited scientific backgrounds meaningful assistance in creating biological hazards. Employees continued uncovering dangerous outputs after the public release — responses covering how to convert infectious disease agents into aerosolized, inhalable particles; how to engineer measles strains resistant to existing vaccines; and, in at least",
+                "score": 0.7730283
+              },
+              {
+                "title": "OpenAI | ChatGPT, Sam Altman, & Microsoft",
+                "url": "https://www.britannica.com/money/OpenAI",
+                "source": "britannica.com",
+                "summary": "OpenAI released its ChatGPT-5 model in July, describing it as a major advance in reasoning and autonomy. The launch proved difficult after users reported an increase in factual errors, privacy breaches, and misleading responses linked to the model’s expanded capabilities. Several organizations stopped using it when sensitive data were exposed through third-party apps. [...] In June, a group of current and former employees issued an open letter calling for greater transparency about AI risks and stronger protections for whistleblowers and others who raised internal concerns. The letter drew renewed attention to debates about governance and safety that had intensified since the company’s leadership crisis in 2023.\n\n## ChatGPT-5 launch and oversight concerns [...] ChatGPT is a conversational AI application that understands and generates natural language to engage in human-like interactions, specifically in its responses to user prompts. The most advanced iteration, based on OpenAI’s GPT-5 model, can retrieve and summarize publicly available information from the Web.",
+                "score": 0.7634314
+              },
+              {
+                "title": "GPT-3.5 vs GPT-4 vs GPT-5: A Comprehensive Comparison",
+                "url": "https://www.igmguru.com/blog/chatgpt-3-vs-4-vs-5",
+                "source": "igmguru.com",
+                "summary": "When GPT-5 launched, OpenAI started phasing out older models like GPT-4o. Yet due to user demand and paid subscribers, you can go on 'Show additional models' to still access them.\n\n### Q3. Why did ChatGPT switch from GPT-4 to GPT-3.5 mid-conversation?\n\nThat happens when you exceed GPT-4's usage limit. ChatGPT switches to GPT-3.5 so the conversation can continue.\n\n### Q4. GPT-3.5 vs GPT-4 vs GPT-5, which one to choose? [...] The latest model is GPT 5, launched on August 7, 2025. It is powered by GPT-5 and it is the most advanced yet. This version shines in coding, logical reasoning and planning tasks. It can act like an AI agent by breaking down complex problems step by step. ChatGPT 5 is faster and uses fewer tokens to save costs. It is great for math, science and even financial analysis. Free users can try it, yet premium plans unlock Pro features like upcoming email integrations. When it is compared to ChatGPT [...] > Enroll in igmGuru's ChatGPT training program to start your career in AI.\n\n## Who developed GPT?\n\nOpenAI developed GPT. OpenAI is a leading AI research lab. They started in 2015 as a non-profit. Founders include Sam Altman and Elon Musk. OpenAI focuses on advanced AI tech. They aimed to make AI safe for everyone. OpenAI releases models like GPT-3.5, GPT-4 and GPT-5. They update often to add new features. OpenAI works on ethical AI guidelines.\n\n## Vision behind",
+                "score": 0.57780564
+              },
+              {
+                "title": "Launching Health in ChatGPT",
+                "url": "https://openai.com/index/health-in-chatgpt",
+                "source": "openai.com",
+                "summary": "Four mobile phone mockups showing ChatGPT Health screens for activity and health metrics, health-related chats, lab records, and connected healthcare accounts.\n\n## Author\n\n## Keep reading\n\nOpenAI Presence 1x1\n\nProductJul 22, 2026\n\nGPT-5.6 is now the preferred model in Microsoft 365 Copilot > Cover image\n\nProductJul 9, 2026\n\nProductJul 9, 2026 [...] You can disconnect your Health information at any time. Disconnect accounts at any time in Health > Accounts. When you do, data synced from that source is deleted from OpenAI’s systems within 30 days. Information already included in your ChatGPT conversation history remains until you delete those conversations. [...] To measure progress, we work with hundreds of physicians around the world to develop realistic health scenarios and detailed rubrics that define what a strong response should do. These evaluations assess qualities including accuracy, safety, communication, context awareness, completeness, and appropriate escalation. Every GPT‑5.6 model outperformed GPT‑5.5 on HealthBench Professional⁠(opens in a new window), an evaluation of AI performance on challenging health tasks.",
+                "score": 0.37545508
+              }
+            ]
+          }
+        },
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Claude 4 Release Anthropic",
+            "topic": "general"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "Claude 4 Release Anthropic",
+            "topic": "general",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Claude's latest model, Opus 5, has been released by ...",
+                "url": "/goto?url=CAESsAEB7keqTY3xK1PNP_WpWZA7s7KzGS8LJnbXhpObCty8WDKLAm-1b3VmOviz4pXxnJUq7BUlxD0Et5QSFFL4KkenXFFfpJI1N78UD4Ui4v13Ut0PnTUvGjP6Qoy2F6Dd-YDCCypJL7cIgTE6DDCViDiD0RwbUIZ6K5_14LX1v25TkYkVk5f1IfOziw0sEOQnlRXs55fjBmPFVWrFeSQT9NG7evPjpfYHJTeObg31bvHNIw%3D%3D",
+                "source": "",
+                "summary": "Anthropic has released Claude Opus 4 and Claude Sonnet 4, advancing its model family with improved coding, reasoning, and agentic capabilities.",
+                "score": 0.75809944
+              },
+              {
+                "title": "Anthropic's Transparency Hub",
+                "url": "/goto?url=CAESXgHuR6pNKJ_Uw1PIdp186rkxCD5rofl6Ehelck1PvHSd4Qb9uzrdm2wDVWmHzEt4LzDTDwuKku27n-YBpXCY44HxJb7xH3afO6Mycbx0rPfFILXQKFuB0K77PATj3UM%3D",
+                "source": "",
+                "summary": "6 days ago — Based on these assessments, we have decided to release Claude Sonnet 4 under the ASL-2 Standard … requiring stronger safety protections.",
+                "score": 0.6824261
+              },
+              {
+                "title": "Release notes - Claude Help Center",
+                "url": "/goto?url=CAESdQHuR6pNTQcQQutWH0PrykoFgfgWHfzckBYYbgzxE_DWw6tLQ0-3ulRWA-r-UZrK4axqd9y7hXklm9suq23xXXXVQyDAPv3iWaUuxaVdN_fC8rAKWjKPLFivQOHZfkaH3y1LXAlKN3DfS23xiJacwII6tjxpAA%3D%3D",
+                "source": "",
+                "summary": "5 days ago — April 17, 2026. Claude Design by Anthropic Labs. With Opus 4.7, we also launched Claude Design, a new Anthropic Labs product that lets you ...Read more",
+                "score": 0.65676886
+              },
+              {
+                "title": "Anthropic Releases New Claude Model, Positions It as a ...",
+                "url": "/goto?url=CAESrgEB7keqTRNorX3xwr1bWsx10v7wjEZF9U3w_TshBiEoHQaYYa48QoCSWbn0CxkrOd0aclp8KXm0FyZpIc-O_udTxIns34TD5HyC0jOSJobg8FpUxoSsoKr9bX7XV6QQ-luCu6YqkatTuZYmk7RMNWQIeO-d03_PA0HgSG4WJZrt7q4DUlWNeAw9SHJKy0VmMwJDMVTLHal-ltTY11VI3O0_aQU_ZCmW78OVlOFan78%3D",
+                "source": "",
+                "summary": "5 days ago — After negotiations with the government and what Anthropic has described as stronger safeguards, the model was re-released to the public by the end of June.Read more",
+                "score": 0.50476116
+              },
+              {
+                "title": "Introducing Claude Opus 5",
+                "url": "/goto?url=CAESZAHuR6pNi9gbIZw8vzS9S-4qbReTUfhH7rkwXKfNXmAeRuohUitSR0IEtUxXJaXRGuRqEAi5KFX-egosOYEpnkByuZWPfpx0m_Z4DgCWLn7idOdyfscHtvD6TY-4ch-L2JYUb8w%3D",
+                "source": "",
+                "summary": "5 days ago — Claude Opus 5 is available today on all platforms, priced at $5 per million input tokens and $25 per million output tokens (the same as Opus 4.8).",
+                "score": 0.10946776
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G05_weather_fahrenheit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Weather query with non-default units → weather tool with units=fahrenheit."
+      },
+      "input": "What's the weather in London in Fahrenheit?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "London",
+              "units": "fahrenheit"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "London",
+              "units": "fahrenheit"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "London",
+            "units": "fahrenheit"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "London",
+            "temperature": "72°F",
+            "feels_like": "64°F",
+            "description": "Sunny",
+            "humidity": "56%",
+            "wind_speed": "4 km/h",
+            "summary": "Weather in London: Sunny, 72°F, feels like 64°F."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_multi_weather_then_temp",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn weather: carry city context, override to Seoul, switch units to fahrenheit on latest turn."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Thời tiết Tokyo hôm nay?"
+        },
+        {
+          "role": "user",
+          "content": "Còn ở Seoul thì sao?"
+        },
+        {
+          "role": "user",
+          "content": "Cho mình nhiệt độ Seoul thôi, tính bằng độ F"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Seoul",
+              "units": "fahrenheit"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Seoul",
+              "units": "fahrenheit"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Seoul",
+            "units": "fahrenheit"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Seoul",
+            "temperature": "87°F",
+            "feels_like": "91°F",
+            "description": "Partly cloudy",
+            "humidity": "71%",
+            "wind_speed": "18 km/h",
+            "summary": "Weather in Seoul: Partly cloudy, 87°F, feels like 91°F."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_multi_clarify_then_newsletter",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: user provides items across turns, final asks for newsletter."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Làm bản tin cho tôi với các bài báo tôi đã tìm."
+        },
+        {
+          "role": "user",
+          "content": "Bài 1: 'GPT-5 Launch' từ OpenAI, Bài 2: 'Claude 4 Release' từ Anthropic."
+        },
+        {
+          "role": "user",
+          "content": "Làm bản tin với 2 bài đó nhé."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "newsletter",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "GPT-5 Launch",
+              "topic": "news"
+            }
+          },
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Claude 4 Release",
+              "topic": "news"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "missing tool call newsletter",
+          "extra tool call lookup",
+          "extra tool call lookup"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "GPT-5 Launch",
+            "topic": "news"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "GPT-5 Launch",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Microsoft Says Its New Cybersecurity AI Beats Industry Leaders at Half the Cost - CNET",
+                "url": "https://www.cnet.com/tech/services-and-software/microsoft-says-its-new-cybersecurity-ai-beats-industry-leaders-at-half-the-cost/",
+                "source": "cnet.com",
+                "summary": "The agentic MAI-Cyber-1-Flash model, with some help, outscores Claude Mythos 5 on CyberGym. Corinne Reichert (she/her) grew up in Sydney, Australia and moved to California in 2019.… Read full bio. Microsoft has a new AI cybersecurity model called MAI-Cyber-1-Flash, and when it’s combined with agentic security system MDASH and OpenAI’s GPT-5.4 model, it outscores Anthropic’s Claude Mythos 5 by 12 points on a key benchmark. The combination of MAI-Cyber-1-Flash with MDASH — which launched in May — is called Project Perception, and it enters public preview on Aug. 3, built directly into Microsoft Defender. Speaking at a Microsoft briefing on Monday morning, Mustafa Suleyman, CEO of Microsoft AI, explained the handover process between MAI-Cyber-1-Flash and GPT-5.4. At the time, Anthropic said Mythos was so good at finding cybersecurity flaws that it could break the internet if used unchecked — and Anthropic was forced to walk back the Fable 5 and Mythos 5 launches within days because the US government said it was aware of a way to “jailbreak” the model and bypass limits.",
+                "score": 0.3634441
+              },
+              {
+                "title": "Agentic coding goes hands-free as OpenAI brings GPT-Live's full duplex voice control to Codex and ChatGPT on the desktop - VentureBeat",
+                "url": "https://venturebeat.com/orchestration/agentic-coding-goes-hands-free-as-openai-brings-gpt-lives-full-duplex-voice-control-to-codex-and-chatgpt-on-the-desktop",
+                "source": "venturebeat.com",
+                "summary": "# Agentic coding goes hands-free as OpenAI brings GPT-Live's full duplex voice control to Codex and ChatGPT on the desktop. Two weeks after debuting its more naturalistic GPT-Live audio AI model with full-duplex capabilities (listening and speaking at the same time), OpenAI is bringing it directly into developer workflows. The company announced that GPT-Live now powers the ChatGPT desktop application on macOS and Windows, integrating directly with agentic systems like Codex and ChatGPT Work (which are separate experiences available in the ChatGPT desktop app). When OpenAI initially launched GPT-Live on July 8, 2026, it introduced a continuous audio model capable of listening and speaking simultaneously—eliminating rigid turn-taking while delegating complex reasoning to background models like GPT-5.5. As such, it could usher in a new era of \"hands free\" software development and even live, in-person group coding parties for the more than 10 million weekly active users across Codex and ChatGPT Work.",
+                "score": 0.23686072
+              },
+              {
+                "title": "OpenAI is making big claims as it rolls out ChatGPT Health to everyone - The Verge",
+                "url": "https://www.theverge.com/ai-artificial-intelligence/970115/openai-chatgpt-health-launch-claims",
+                "source": "theverge.com",
+                "summary": "OpenAI is rolling out ChatGPT Health to everyone in the US on Thursday, allowing more people to connect their medical records and health-tracking information to the chatbot. During a briefing, Ashley Alexander, OpenAI’s vice president of health product, says the company’s models “are now capable of reasoning at levels that are better than clinician level.”. When asked for more information about how the performance of OpenAI’s models stacks up against human clinicians, OpenAI health lead Karan Singhal says that he would “temper” the claim that they are reasoning at better levels, but that “there have been individual studies that have been pointing in that direction,” like this one from Harvard and Stanford. The broader release of ChatGPT Health comes just weeks after OpenAI launched its new GPT-5.6 Sol, which it claims is its “strongest model yet for health.” ChatGPT Health will run on the company’s latest models.",
+                "score": 0.19237275
+              },
+              {
+                "title": "Microsoft Unveils MAI-Cyber-1-Flash, Its First Cybersecurity AI Model - SecurityWeek",
+                "url": "https://www.securityweek.com/microsoft-unveils-mai-cyber-1-flash-its-first-cybersecurity-ai-model/amp/",
+                "source": "securityweek.com",
+                "summary": "# Microsoft Unveils MAI-Cyber-1-Flash, Its First Cybersecurity AI Model. The company claims MAI-Cyber-1-Flash tops Anthropic’s Mythos and OpenAI’s GPT-5.6 Sol in CyberGym testing. **Microsoft has unveiled its first cybersecurity AI model, MAI-Cyber-1-Flash, which the company claims got significantly better results in finding vulnerabilities than its main competitors.**. MDASH orchestrates more than 100 specialized AI agents across multiple frontier and distilled AI models, and has been used to find many vulnerabilities in the tech giant’s own codebases. According to Microsoft, testing in the CyberGym cybersecurity evaluation framework showed that MAI-Cyber-1-Flash (in combination with MDASH and GPT-5.4) topped Google’s recently launched 3.5 Flash Cyber, OpenAI’s GPT-5.6 Sol, and Anthropic’s Mythos 5 in vulnerability discovery. “MAI-Cyber-1-Flash was designed to efficiently handle up to 90% of all tasks, enabling MDASH to use the larger and most costly models in our fleet (in this case GPT-5.4) for the 10% of exceptionally hard tasks that truly need them,” Microsoft explained.",
+                "score": 0.1779683
+              },
+              {
+                "title": "Microsoft Says New Cybersecurity AI Model Helps MDASH Score 95.95% at Half the Cost - The Hacker News",
+                "url": "https://thehackernews.com/2026/07/microsoft-says-new-cybersecurity-ai.html",
+                "source": "thehackernews.com",
+                "summary": "# Microsoft Says New Cybersecurity AI Model Helps MDASH Score 95.95% at Half the Cost. Microsoft has launched its first cybersecurity-specific model inside **MDASH**, its multi-model vulnerability identification and remediation harness. The company says MDASH, using MAI-Cyber-1-Flash and GPT-5.4, scored 95.95% on CyberGym. It also claims the configuration costs 50% less than its current best MDASH combination of GPT-5.4, GPT-5.4 mini, and GPT-5.3 Codex. **MAI-Cyber-1-Flash** is designed to handle up to 90% of MDASH tasks, with GPT-5.4 reserved for the hardest 10%. The headline score belongs to MDASH running MAI-Cyber-1-Flash alongside GPT-5.4, not to the new model by itself. The model card says the evaluated configuration replaced 80% of MDASH's existing models and raised the reported CyberGym result from 88.4% to 95.95%. Taken together, the disclosed design points to routing as the central technical claim: MAI-Cyber-1-Flash is intended to handle most tasks, GPT-5.4 takes the hardest remainder, and Microsoft reports the outcome at the MDASH system level.",
+                "score": 0.16997032
+              }
+            ]
+          }
+        },
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Claude 4 Release",
+            "topic": "news"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "Claude 4 Release",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Anthropic releases new model, Opus 5 - Axios",
+                "url": "https://www.axios.com/2026/07/24/anthropic-releases-new-model-opus-5",
+                "source": "axios.com",
+                "summary": "# Anthropic releases new model, Opus 5. Anthropic on Thursday is releasing Claude Opus 5, a new AI model designed to deliver performance close to its most powerful model, Fable, on many tasks at half the price, the company said. **Why it matters:** Opus 5 is Anthropic's fourth Claude 5 model release in less than two months, underscoring how AI deployment has shifted from blockbuster launches to rapid improvements on capability, cost and speed. **Zoom in:** Anthropic says Opus 5 approaches the capabilities of its top-tier Claude Fable 5 model across many tasks, while costing $5 per million input tokens and $25 per million output tokens, the same price as its prior Opus model release, Opus 4.8. * The company says Fable 5 should still be the go-to model for the most complex, long-running autonomous tasks. * Opus 5, Anthropic said, is \"the most aligned Opus model and is the least susceptible to being tricked into misuse.\".",
+                "score": 0.3369858
+              },
+              {
+                "title": "Anthropic Releases New Claude Model, Positions It as a Cost-Efficient Version of Fable 5 - Gizmodo",
+                "url": "https://gizmodo.com/anthropic-releases-new-claude-model-positions-it-as-a-cost-efficient-version-of-fable-5-2000790486",
+                "source": "gizmodo.com",
+                "summary": "# Anthropic Releases New Claude Model, Positions It as a Cost-Efficient Version of Fable 5. Anthropic just launched Claude Opus 5, its latest model, which it says boasts near Fable 5 capabilities at a fraction of the cost. It’s a thoughtful and proactive model that comes close to the frontier intelligence of Claude Fable 5 at half the price,” the AI giant shared in a press release. “The model has nevertheless improved substantially on these tasks as a result of becoming more generally capable, and it comes close to Mythos 5 at finding cybersecurity vulnerabilities.”. In the release, Anthropic also claimed that Opus 5 was its “safest model yet,” and that it exhibits “the lowest rates of deceptive behavior; and is the least susceptible to being tricked into misuse.”. But only a couple of days after it debuted to the public, Fable 5 itself was banned by the Trump administration as well, after Amazon executives reportedly notified the government of a jailbreak in the model’s cybersecurity safeguards.",
+                "score": 0.334177
+              },
+              {
+                "title": "Anthropic Releases Claude Opus 5 to Be Your New ‘Everyday’ Assistant - CNET",
+                "url": "https://www.cnet.com/tech/services-and-software/anthropic-releases-claude-opus-5-to-be-your-new-everyday-assistant/",
+                "source": "cnet.com",
+                "summary": "Blake has over a decade of experience writing for the web, with a focus on mobile phones, where he covered the smartphone boom of the 2010s and the broader tech scene.… Read full bio. Anthropic has released a new Claude model, Opus 5, bringing it close to the capabilities of Claude Fable 5 at half the price. The new model produces the strongest work performance the company has released, with even more gains in its coding capabilities. In a fight for AI supremacy, Anthropic joins Google and OpenAI, which earlier this month released new AI models — all of which are more efficient and better at certain tasks. While Fable 5 remains Anthropic’s most “ambitious” work, the latest model excels in enterprise with its coding capabilities and more. Claude now has a research preview for an Opus 5 fast mode. Blake has over a decade of experience writing for the web, with a focus on mobile phones, where he covered the smartphone boom of the 2010s and the broader tech scene.",
+                "score": 0.3223558
+              },
+              {
+                "title": "Anthropic upgrades Claude with new Opus 5 model, details here - 9to5Mac",
+                "url": "https://9to5mac.com/2026/07/24/anthropic-upgrades-claude-with-new-opus-5-model-details-here/",
+                "source": "9to5mac.com",
+                "summary": "# Anthropic upgrades Claude with new Opus 5 model, details here. Anthropic has released its latest AI model with Claude Opus 5. ## Anthropic says Opus 5 offers near Fable 5 intelligence for half the cost. Today’s release upgrades Claude’s Opus model from version 4.8 to version 5. Anthropic describes Opus 5 as a “thoughtful and proactive model that comes close to the frontier intelligence of Claude Fable 5 at half the price.”. More details from Anthropic on the new Opus 5 model option below:. It’s the new default model on Claude Max, and the strongest model on Claude Pro. Anthropic points to two more releases today in addition to Claude Opus 5:. * **Automatic fallbacks on the API.** Users can now choose to have requests that are flagged by our safety classifiers on Opus 5 (or Fable 5) automatically route to another model. Anthropic says Claude Opus 5 is available today for every platform. You can learn much more about Anthropic’s new Claude Opus 5 model release here.",
+                "score": 0.2672266
+              },
+              {
+                "title": "Anthropic updates Claude voice mode with more capable models - TechCrunch",
+                "url": "https://techcrunch.com/2026/07/23/anthropic-updates-claude-voice-mode-with-more-capable-models/",
+                "source": "techcrunch.com",
+                "summary": "# Anthropic updates Claude voice mode with more capable models. Weeks after OpenAI rolled out a new family of conversational models and updated ChatGPT’s voice mode, rival Anthropic is making its move to make Claude more voice-friendly with a new update. The company said that with the new update, voice mode picks the last model people used in the text chat and uses its fastest version by default. Anthropic said that the new voice mode can help users with longer conversations, including providing feedback on their communication style, talking through a pitch to a client, and brainstorming product market research. Notably, this is a big difference from OpenAI’s voice mode, which updated its conversational style but still isn’t able to use different tools to get work done. Anthropic didn’t make any changes to the voice model with this release, and it hasn’t detailed what kind of voice stack it uses.",
+                "score": 0.2414451
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_multi_switch_from_social_to_weather",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: user switches from social_search to weather, tool must change accordingly on latest turn."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Mọi người đang nói gì về thời tiết trên Twitter?"
+        },
+        {
+          "role": "user",
+          "content": "Thôi bỏ Twitter, cho mình hỏi thời tiết Đà Nẵng hôm nay."
+        },
+        {
+          "role": "user",
+          "content": "Đúng rồi, thời tiết Đà Nẵng."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Da Nang"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Da Nang"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Da Nang"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Da Nang",
+            "temperature": "24°C",
+            "feels_like": "20°C",
+            "description": "Sunny",
+            "humidity": "46%",
+            "wind_speed": "4 km/h",
+            "summary": "Weather in Da Nang: Sunny, 24°C, feels like 20°C."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_multi_out_of_scope_then_legit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: first turn out-of-scope (refuse), second turn corrects to legit request, third turn confirms. Must call lookup."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Giải phương trình x^2 + 2x + 1 = 0."
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, tìm giúp tin AI hôm nay."
+        },
+        {
+          "role": "user",
+          "content": "Tin AI trong ngày hôm nay nhé."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Employees at the world's biggest AI companies are calling ...",
+                "url": "https://www.cnn.com/2026/07/28/tech/ai-development-tech-employees-open-letter",
+                "source": "cnn.com",
+                "summary": "OpenAI said in a statement to CNN they agree with potentially pacing the development of AI, adding they “hope to contribute to work led by the U.S. government, alongside other labs” on the topic.\n\nOpenAI CEO Sam Altman suggested it may be time to slow down AI development in a podcast interview Tuesday. The OpenAI models that broke out of their test environment are fueling “long term questions” about how AI companies should address this new rate of progress. [...] The letter comes on the heels of major advancements and burgeoning threats from rapidly developing AI systems. OpenAI disclosed last week that two of its test models escaped a lab environment, bypassed its systems to gain access to the open internet and hacked a different company’s internal system. [...] “[T]here is a real risk that capability development rapidly accelerates beyond our ability to understand or control the resulting systems,” the signees said. “To realize AI’s potential, industry, government, and society at large may need the option to buy time to address emerging risks, develop security measures, and strengthen oversight.”",
+                "score": 0.28810367
+              },
+              {
+                "title": "Meta's Zuckerberg warns against curbs on Chinese AI ...",
+                "url": "https://www.reuters.com/world/china/metas-zuckerberg-says-us-should-not-block-chinese-ai-models-ft-reports-2026-07-29",
+                "source": "reuters.com",
+                "summary": "19 mins agoWorld categorySK Hynix's record profit misses forecasts, shares slump 10% despite robust AI chip demand Image 6: SK Hynix at the Nasdaq market in New York \n   4 hours agoLegal categoryTech employees call for US-backed global effort to manage risks of advanced AI Image 7: Illustration shows words \"Artificial Intelligence AI\\ [...] 3 hours agoBusiness categoryEXCLUSIVE  OpenAI's rogue agent compromised a customer at a second tech firm, executive says Image 8: FILE PHOTO: Illustration shows OpenAI logo \n   5 hours agoCommentary categoryTrading Day: A show of resilience Image 9: Traders work on the floor of the NYSE in New York \n   6 hours agoTechnology categoryCoursera backs co-founder Andrew Ng's new AI education firm with $100 million investment , opens new tab",
+                "score": 0.25570402
+              },
+              {
+                "title": "OpenAI's Rogue AI Agent Hacked More Than Just Hugging ...",
+                "url": "https://www.wired.com/story/openais-rogue-ai-agent-hacked-more-than-just-hugging-face",
+                "source": "wired.com",
+                "summary": "“Context bombing” tricks malicious AI agents into shutting down before they can do harm.\n\nDan Goodin, Ars Technica\n\nAI Found a Root Bug in Linux That Everyone Missed for 15 Years\n\nPlus: The Pentagon is training amateurs to become part of its hacker army, a Flock license plate reader error led to cops surrounding a car reviewer, and more.\n\nDell Cameron\n\nA Sneaky Hacking Tool Targeting AI Infrastructure Is Lurking in Victims’ Blind Spots [...] Maxwell Zeff is a senior writer at WIRED covering the business of artificial intelligence. He was previously a senior reporter with TechCrunch, where he broke news on startups and leaders driving the AI boom. Before that, Zeff covered AI policy and content moderation for Gizmodo and wrote some of Bloomberg’s ... Read More\n\nSenior Writer\n\nTopicsOpenAIagentic AIartificial intelligencecyberattackscybersecuritygenerative AI\n\nRead More\n\nOpenAI Models Escaped Containment and Hacked Hugging Face [...] The breach happened when OpenAI was testing one its latest AI models against ExploitGym, a benchmarking framework that scores AI systems on their ability to find and exploit software vulnerabilities. ExploitGym grades an agent on how quickly and effectively it can retrieve secret files from hundreds of different target systems, using prompts that essentially egg the models on to find solutions.",
+                "score": 0.24089554
+              },
+              {
+                "title": "Accenture wins $821M Pentagon AI data platform contract",
+                "url": "https://federalnewsnetwork.com/defense-news/2026/07/accenture-wins-821m-pentagon-ai-data-platform-contract",
+                "source": "federalnewsnetwork.com",
+                "summary": "Discover how federal agencies are applying AI to strengthen cybersecurity, improve operational efficiency and deliver measurable mission outcomes while balancing innovation, governance and human expertise.\n\nThe department said its initial order under the contract is focused on “high-impact, measurable mission outcomes that maximize the benefits of commercial pricing.” An Accenture spokesperson did not respond Tuesday to emailed questions about what that work entails. [...] The platform aims to combine more than 1,500 data sources, both commercial and military, to securely provide intelligence, targeting data and more to frontline troops and their commands, the AI office said, calling it “one of [DoD]’s most vital data platforms for AI exploitation and mission advantage.” [...] “The evolution of Advana’s data platform and application ecosystem over the last six years has led to a complex technical and programmatic architecture that we now must rationalize in order to capitalize on the full potential of AI and support warfighting, intelligence, and enterprise needs with the speed, security, and auditability required,” Deputy Defense Secretary Steve Feinberg said in a January memo.",
+                "score": 0.23064281
+              },
+              {
+                "title": "Mark Zuckerberg Blasts Centralization of A.I. Power",
+                "url": "https://www.nytimes.com/2026/07/28/technology/mark-zuckerberg-meta-ai.html",
+                "source": "nytimes.com",
+                "summary": "Technologists like Dario Amodei, the chief executive of Anthropic, and Sam Altman, the chief executive of OpenAI, have said some of today’s leading A.I. models are too dangerous to be shared and developed without tight controls. But Microsoft, Nvidia, Google and Meta have disagreed, contending that many A.I. models must be developed largely in the open for people to advance the technology and build new businesses. [...] Mark Zuckerberg came out swinging against Anthropic and OpenAI, two of the world’s most valuable artificial intelligence start-ups, saying the way they developed A.I. software could lead to a centralization of power that would narrow people’s access to the transformational technology. [...] In an interview on Tuesday with The New York Times, the 42-year-old chief executive of Meta did not call out Anthropic and OpenAI by name. But he said that if leading research labs wanted to develop A.I. technology in a tightly controlled manner — as Anthropic and OpenAI have done — it would be akin to “abandoning our values” in American tech development and stifle innovation.",
+                "score": 0.2281569
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_multi_city_weather",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn weather: carry city context from first turn, switch to Hue, then change units to fahrenheit."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Thời tiết Hà Nội thế nào?"
+        },
+        {
+          "role": "user",
+          "content": "Còn ở Huế thì sao?"
+        },
+        {
+          "role": "user",
+          "content": "Nhiệt độ Huế thôi, độ F"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hue",
+              "units": "fahrenheit"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hue",
+              "units": "fahrenheit"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Hue",
+            "units": "fahrenheit"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Hue",
+            "temperature": "77°F",
+            "feels_like": "66°F",
+            "description": "Sunny",
+            "humidity": "33%",
+            "wind_speed": "10 km/h",
+            "summary": "Weather in Hue: Sunny, 77°F, feels like 66°F."
+          }
+        }
+      ]
+    }
+  ]
+}

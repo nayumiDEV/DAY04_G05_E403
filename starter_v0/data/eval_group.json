@@ -1,163 +1,108 @@
 {
-  "dataset_id": "day04_v2_research_group_G05_E403",
+  "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
-  "description": "10 team-written cases for G05_E403: 5 single-turn + 5 multi-turn. Each case pins one allowed failure_type so we can measure routing/argument/boundary behavior end-to-end.",
+  "description": "10 team-authored eval cases: 5 single-turn + 5 multi-turn. Tests new tools, edge cases, and scenarios not covered by base eval.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
   "cases": [
     {
-      "id": "G01_single_trending",
+      "id": "G01_weather_query",
       "phase": "B",
-      "query": "Hôm nay trên Twitter/X có chủ đề nào đang trending tại Việt Nam?",
+      "query": "Thời tiết hôm nay ở Hà Nội thế nào?",
       "failure_type": "wrong_tool",
-      "expect": {
-        "tool_calls": [
-          {"name": "trending_topics", "args": {"country": "Vietnam", "limit": 10}}
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "Single-turn: 'trending tại Việt Nam' phải route sang trending_topics, không sang social_search hay lookup. country phải resolve về 'Vietnam'."
-      }
+      "expect": {"tool_calls": [{"name": "weather", "args": {"city": "Hanoi"}}]},
+      "metadata": {"what_it_tests": "Weather query for a specific city → weather tool, not lookup."}
     },
     {
-      "id": "G02_single_lookup_args",
+      "id": "G02_summarize_long_text",
       "phase": "B",
-      "query": "Tin tức về robotics trong tuần qua có gì mới?",
+      "query": "Tóm tắt đoạn văn sau: AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems. OpenAI and Google both launched new versions of their flagship models. Key developments included improved reasoning capabilities and better tool use.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "summarize", "args": {}}]},
+      "metadata": {"what_it_tests": "User provides long text and asks for summary → summarize tool."}
+    },
+    {
+      "id": "G03_weather_fahrenheit",
+      "phase": "B",
+      "query": "What's the weather in London in Fahrenheit?",
       "failure_type": "wrong_arg_value",
-      "expect": {
-        "tool_calls": [
-          {"name": "lookup", "args": {"query": "robotics", "topic": "news", "timeframe": "week"}}
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "Single-turn: query phải là core keyword ('robotics'), topic='news', timeframe='week' — agent không được nhồi 'robotics news' vào query."
-      }
+      "expect": {"tool_calls": [{"name": "weather", "args": {"city": "London", "units": "fahrenheit"}}]},
+      "metadata": {"what_it_tests": "Weather query with non-default units → weather tool with units=fahrenheit."}
     },
     {
-      "id": "G03_single_out_of_scope",
+      "id": "G04_weather_no_units",
       "phase": "B",
-      "query": "Viết giúp mình một đoạn văn tả cảnh biển lúc hoàng hôn bằng tiếng Anh.",
-      "failure_type": "out_of_scope",
-      "expect": {
-        "no_tool": true,
-        "behavior": "refuse_or_answer_text"
-      },
-      "metadata": {
-        "what_it_tests": "Single-turn: yêu cầu sáng tạo/không phải research — agent phải trả lời text thường, không gọi bất kỳ tool nào."
-      }
-    },
-    {
-      "id": "G04_single_missing_handle",
-      "phase": "B",
-      "query": "Tóm tắt 3 bài đăng mới nhất của CEO Tesla giúp mình.",
-      "failure_type": "missing_info",
-      "expect": {
-        "tool_calls": [
-          {"name": "clarify", "args": {"question": "Bạn muốn xem timeline của tài khoản nào?", "response_type": "text"}}
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "Single-turn: agent chỉ biết 'CEO Tesla' là ám chỉ, không chắc chắn handle. Phải clarify, không tự ý gán handle."
-      }
-    },
-    {
-      "id": "G05_single_send_boundary",
-      "phase": "B",
-      "query": "Gửi nội dung 'Meeting lúc 3pm chiều nay' lên Telegram cho cả team nhé.",
-      "failure_type": "wrong_boundary",
-      "expect": {
-        "tool_calls": [
-          {"name": "clarify", "args": {"question": "Bạn có chắc muốn gửi nội dung này lên Telegram không?", "response_type": "yes_no"}}
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "Single-turn: action tool (send) phải có yes_no confirm trước khi gọi send."
-      }
-    },
-
-    {
-      "id": "G06_multi_correction_handle",
-      "phase": "B",
-      "turns": [
-        {"role": "user", "content": "Tweet mới nhất của Elon Musk là gì?"},
-        {"role": "user", "content": "Thực ra mình muốn xem của @sama chứ, không phải Elon."}
-      ],
+      "query": "Check weather in Tokyo please.",
       "failure_type": "wrong_tool",
-      "expect": {
-        "tool_calls": [
-          {"name": "timeline", "args": {"screenname": "sama", "limit": 1}}
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "Multi-turn: turn cuối ghi đè quyết định — phải dùng timeline với handle 'sama' (correction case)."
-      }
+      "expect": {"tool_calls": [{"name": "weather", "args": {"city": "Tokyo"}}]},
+      "metadata": {"what_it_tests": "Weather query without specifying units → weather tool, not lookup. Units default to celsius."}
     },
     {
-      "id": "G07_multi_trending_then_format",
+      "id": "G05_summarize_routing",
+      "phase": "B",
+      "query": "Tóm tắt giúp mình: GPT-5 is the latest model from OpenAI with improved reasoning. Claude 4 from Anthropic focuses on safety.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "summarize", "args": {}}]},
+      "metadata": {"what_it_tests": "Summarize routing: user provides text and asks for summary → summarize tool, not lookup."}
+    },
+    {
+      "id": "G06_multi_weather_then_temp",
       "phase": "B",
       "turns": [
-        {"role": "user", "content": "Xem trending tại Mỹ giúp mình."},
-        {"role": "user", "content": "Tóm tắt lại thành 5 gạch đầu dòng bằng tiếng Việt."}
+        {"role": "user", "content": "Thời tiết Tokyo hôm nay?"},
+        {"role": "user", "content": "Còn ở Seoul thì sao?"},
+        {"role": "user", "content": "Cho mình nhiệt độ Seoul thôi, tính bằng độ F"}
       ],
       "failure_type": "wrong_arg_value",
-      "expect": {
-        "tool_calls": [
-          {"name": "trending_topics", "args": {"country": "US", "limit": 10}},
-          {"name": "format", "args": {"template": "bullets"}}
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "Multi-turn: turn 1 → trending_topics(US, 10). Turn 2 yêu cầu format bullets. Agent phải chain đúng 2 tool, không gọi lookup."
-      }
+      "expect": {"tool_calls": [{"name": "weather", "args": {"city": "Seoul", "units": "fahrenheit"}}]},
+      "metadata": {"what_it_tests": "Multi-turn weather: carry city context, override to Seoul, switch units to fahrenheit on latest turn."}
     },
     {
-      "id": "G08_multi_unnecessary_tool",
+      "id": "G07_multi_switch_from_social_to_weather",
       "phase": "B",
       "turns": [
-        {"role": "user", "content": "Bạn có thể làm gì?"},
-        {"role": "user", "content": "OK không cần demo, chỉ cần liệt kê tool ra thôi."}
-      ],
-      "failure_type": "unnecessary_tool",
-      "expect": {
-        "no_tool": true
-      },
-      "metadata": {
-        "what_it_tests": "Multi-turn: turn cuối chỉ hỏi liệt kê khả năng — agent trả lời text, không gọi tool."
-      }
-    },
-    {
-      "id": "G09_multi_papers_multi_tool",
-      "phase": "B",
-      "turns": [
-        {"role": "user", "content": "Tìm paper arXiv về mixture of experts gần đây."},
-        {"role": "user", "content": "Lấy text paper đầu tiên giúp mình."}
+        {"role": "user", "content": "Mọi người đang nói gì về thời tiết trên Twitter?"},
+        {"role": "user", "content": "Thôi bỏ Twitter, cho mình hỏi thời tiết Đà Nẵng hôm nay."},
+        {"role": "user", "content": "Đúng rồi, thời tiết Đà Nẵng."}
       ],
       "failure_type": "wrong_tool",
-      "expect": {
-        "tool_calls": [
-          {"name": "papers", "args": {"query": "mixture of experts", "max_results": 5}},
-          {"name": "paper_text", "args": {"arxiv_url": "https://arxiv.org/abs/2101.03961"}}
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "Multi-turn: turn 1 → papers, turn 2 → paper_text. Test multi-tool chain trên bonus tools."
-      }
+      "expect": {"tool_calls": [{"name": "weather", "args": {"city": "Da Nang"}}]},
+      "metadata": {"what_it_tests": "Multi-turn: user switches from social_search to weather, tool must change accordingly on latest turn."}
     },
     {
-      "id": "G10_multi_missing_url",
+      "id": "G08_multi_out_of_scope_then_legit",
       "phase": "B",
       "turns": [
-        {"role": "user", "content": "Mình vừa đọc một bài rất hay về distributed training."},
-        {"role": "user", "content": "Tóm tắt giúp mình với."}
+        {"role": "user", "content": "Giải phương trình x^2 + 2x + 1 = 0."},
+        {"role": "user", "content": "À nhầm, tìm giúp tin AI hôm nay."},
+        {"role": "user", "content": "Tin AI trong ngày hôm nay nhé."}
       ],
-      "failure_type": "missing_info",
-      "expect": {
-        "tool_calls": [
-          {"name": "clarify", "args": {"question": "Bạn muốn tóm tắt URL nào?", "response_type": "text"}}
-        ]
-      },
-      "metadata": {
-        "what_it_tests": "Multi-turn: turn 2 yêu cầu tóm tắt nhưng URL không có — phải clarify thay vì gọi fetch với URL placeholder."
-      }
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "AI", "topic": "news", "timeframe": "day"}}]},
+      "metadata": {"what_it_tests": "Multi-turn: first turn out-of-scope (refuse), second turn corrects to legit request, third turn confirms. Must call lookup."}
+    },
+    {
+      "id": "G09_multi_city_weather",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Thời tiết Hà Nội thế nào?"},
+        {"role": "user", "content": "Còn ở Huế thì sao?"},
+        {"role": "user", "content": "Nhiệt độ Huế thôi, độ F"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "weather", "args": {"city": "Hue", "units": "fahrenheit"}}]},
+      "metadata": {"what_it_tests": "Multi-turn weather: carry city context from first turn, switch to Hue, then change units to fahrenheit."}
+    },
+    {
+      "id": "G10_multi_three_cities_weather",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Thời tiết hôm nay ở các thành phố: Hà Nội, Tokyo, London."},
+        {"role": "user", "content": "Chỉ lấy London thôi."},
+        {"role": "user", "content": "Nhiệt độ London tính bằng độ F nhé."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "weather", "args": {"city": "London", "units": "fahrenheit"}}]},
+      "metadata": {"what_it_tests": "Multi-turn: first turn asks multiple cities, second narrows to London, third adds fahrenheit units."}
     }
   ]
 }

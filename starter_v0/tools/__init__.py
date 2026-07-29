@@ -5,26 +5,21 @@ from typing import Any
 
 import yaml
 
-# Folder names are intentionally vague to match the tool names students see.
-# The imported function names are the underlying implementations (unchanged).
 from .clarify.tool import ask_user
-from .papers.tool import arxiv_search
-from .paper_text.tool import get_arxiv_paper_text
-from .timeline.tool import get_user_tweets
+from .compare.tool import compare_items
 from .fetch.tool import read_url
 from .format.tool import render_digest
-from .policy.tool import search_company_policy
-from .social_search.tool import search_tweets
-from .send.tool import send_telegram
 from .lookup.tool import web_search
-from .trending_topics.tool import get_trending_topics
+from .newsletter.tool import compile_newsletter
+from .papers.tool import arxiv_search
+from .paper_text.tool import get_arxiv_paper_text
+from .policy.tool import search_company_policy
+from .send.tool import send_telegram
+from .social_search.tool import search_tweets
+from .summarize.tool import extract_key_points
+from .timeline.tool import get_user_tweets
+from .weather.tool import get_weather
 
-
-# NOTE (starter_v0): tool names here are intentionally vague. These keys are the
-# names the model sees AND the names data/eval_base.json + data/eval_research_extension.json
-# match against. If a team renames a tool, it MUST stay in sync across ALL of:
-#   artifacts/tools.yaml  ->  this dict  ->  data/eval_base.json + data/eval_research_extension.json
-# Otherwise the eval raises "not declared in tools.yaml" or scores every call as a name mismatch.
 TOOL_FUNCTIONS = {
     "clarify": ask_user,
     "timeline": get_user_tweets,
@@ -32,11 +27,14 @@ TOOL_FUNCTIONS = {
     "lookup": web_search,
     "fetch": read_url,
     "format": render_digest,
+    "summarize": extract_key_points,
+    "newsletter": compile_newsletter,
+    "compare": compare_items,
+    "weather": get_weather,
     "send": send_telegram,
     "policy": search_company_policy,
     "papers": arxiv_search,
     "paper_text": get_arxiv_paper_text,
-    "trending_topics": get_trending_topics,
 }
 
 
@@ -53,4 +51,3 @@ def to_openai_tools(declarations: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "parameters": item.get("parameters", {"type": "object", "properties": {}}),
         },
     } for item in declarations]
-

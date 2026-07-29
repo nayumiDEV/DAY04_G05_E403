@@ -1,0 +1,837 @@
+{
+  "run_id": "v3_B_group_openrouter_20260729T153444112987",
+  "version": "v3",
+  "artifact_version": "v3+p40b89db65b57+t9d0da383669f",
+  "prompt_hash": "40b89db65b57bf915d9c136f143690e983b899cd74591d26187512486a4dd7c9",
+  "tools_hash": "9d0da383669f9ca5d608a1b69f164af39fa128e6814781af0e85633b55734379",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\nayum\\Works\\learn\\AI20K_Day04\\Day04-C401-Prompt-Engineering-Tool-Calling-Labs-student-k4\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\nayum\\Works\\learn\\AI20K_Day04\\Day04-C401-Prompt-Engineering-Tool-Calling-Labs-student-k4\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "10 team-authored eval cases: 5 single-turn + 5 multi-turn. Tests new tools, edge cases, and scenarios not covered by base eval.",
+  "generated_at": "2026-07-29T15:34:44",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 6,
+    "case_accuracy": 0.6,
+    "tool_routing_accuracy": 0.8,
+    "argument_accuracy": 0.6,
+    "multiturn_accuracy": 0.4,
+    "failure_counts": {
+      "wrong_tool": 4
+    },
+    "observed_mismatch_counts": {
+      "missing_tool_call": 2,
+      "wrong_arg_value": 2
+    }
+  },
+  "results": [
+    {
+      "id": "G01_weather_query",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Weather query for a specific city → weather tool, not lookup."
+      },
+      "input": "Thời tiết hôm nay ở Hà Nội thế nào?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hanoi"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hanoi"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Hanoi"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Hanoi",
+            "temperature": "32°C",
+            "feels_like": "37°C",
+            "description": "Light rain shower",
+            "humidity": "63%",
+            "wind_speed": "16 km/h",
+            "summary": "Weather in Hanoi: Light rain shower, 32°C, feels like 37°C."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_summarize_long_text",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "User provides long text and asks for summary → summarize tool."
+      },
+      "input": "Tóm tắt đoạn văn sau: AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems. OpenAI, Google, and Anthropic all launched new versions of their flagship models. Key developments included improved reasoning capabilities, better tool use, and longer context windows. The field also saw growing focus on AI safety and alignment research.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "summarize",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "summarize",
+            "args": {
+              "text": "AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems. OpenAI, Google, and Anthropic all launched new versions of their flagship models. Key developments included improved reasoning capabilities, better tool use, and longer context windows. The field also saw growing focus on AI safety and alignment research.",
+              "max_points": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "summarize",
+          "args": {
+            "text": "AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems. OpenAI, Google, and Anthropic all launched new versions of their flagship models. Key developments included improved reasoning capabilities, better tool use, and longer context windows. The field also saw growing focus on AI safety and alignment research.",
+            "max_points": 5
+          },
+          "result": {
+            "tool": "extract_key_points",
+            "input_length": 371,
+            "key_points": [
+              "AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems.",
+              "Key developments included improved reasoning capabilities, better tool use, and longer context windows.",
+              "OpenAI, Google, and Anthropic all launched new versions of their flagship models.",
+              "The field also saw growing focus on AI safety and alignment research."
+            ],
+            "keywords": [
+              "advances",
+              "alignment",
+              "anthropic",
+              "better",
+              "capabilities",
+              "capable",
+              "companies",
+              "context",
+              "developments",
+              "field"
+            ],
+            "point_count": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_compare_two_articles",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "User asks to compare two items → compare tool."
+      },
+      "input": "So sánh hai bài báo này giúp mình: bài thứ nhất nói về GPT-5, bài thứ hai nói về Claude 4.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "compare",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "GPT-5",
+              "topic": "general",
+              "max_results": 1
+            }
+          },
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Claude 4",
+              "topic": "general",
+              "max_results": 1
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "missing tool call compare",
+          "extra tool call lookup",
+          "extra tool call lookup"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "GPT-5",
+            "topic": "general",
+            "max_results": 1
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "GPT-5",
+            "topic": "general",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "GPT-5: Advancements in AI Technology | PDF | Artificial Intelligence | Intelligence (AI) & Semantics",
+                "url": "https://www.scribd.com/document/906785429/GPT-5",
+                "source": "scribd.com",
+                "summary": "GPT-5 is the latest advancement in OpenAI's Generative Pre-trained Transformer models, enhancing conversational AI with improved reasoning, accuracy, and multimodal capabilities. It has various applications across education, healthcare, business, programming, and creative work, while also raising ethical concerns regarding misinformation, bias, and user privacy. The model signifies a shift towards AI as a collaborative partner in various fields, with future iterations expected to further",
+                "score": 0.9372167
+              }
+            ]
+          }
+        },
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Claude 4",
+            "topic": "general",
+            "max_results": 1
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "Claude 4",
+            "topic": "general",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Anthropic’s Transparency Hub",
+                "url": "https://www.anthropic.com/transparency",
+                "source": "anthropic.com",
+                "summary": "Model descriptionClaude Opus 4 and Claude Sonnet 4 are two new hybrid reasoning large language models from Anthropic. They have advanced capabilities in reasoning, visual analysis, computer use, and tool use. They are particularly adept at complex computer coding tasks, which they can productively perform autonomously for sustained periods of time. In general, the capabilities of Claude Opus 4 are stronger than those of Claude Sonnet 4.\nBenchmarked CapabilitiesSee our Claude 4 Announcement [...] safeguards removed. Test group participants who had access to Claude Opus 4 scored 63% ± 13%, and participants who had access to Claude Sonnet 4 scored 42% ± 11%, compared to 25% ± 13% in the control group. This means Claude Opus 4 helped participants perform about 2.5 times better than without AI assistance, while Claude Sonnet 4 provided about 1.7 times improvement. [...] Claude Opus 4.1 represents incremental improvements over Claude Opus 4. View the Claude Opus 4 model report or the Claude Opus 4.1 system card addendum for key updates.\n\nClaude 3.7 Sonnet Summary Table",
+                "score": 0.8342047
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_newsletter_request",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "User requests a newsletter compilation → newsletter tool, not format."
+      },
+      "input": "Làm bản tin AI hôm nay với các tin tôi đã tìm được.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "newsletter",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "newsletter",
+            "args": {
+              "items": [],
+              "title": "Bản tin AI hôm nay"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "newsletter",
+          "args": {
+            "items": [],
+            "title": "Bản tin AI hôm nay"
+          },
+          "result": {
+            "tool": "compile_newsletter",
+            "title": "Bản tin AI hôm nay",
+            "date": "2026-07-29",
+            "markdown": "# Bản tin AI hôm nay\n_2026-07-29_ — 0 items\n",
+            "item_count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "G05_weather_fahrenheit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Weather query with non-default units → weather tool with units=fahrenheit."
+      },
+      "input": "What's the weather in London in Fahrenheit?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "London",
+              "units": "fahrenheit"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "London",
+              "units": "fahrenheit"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "London",
+            "units": "fahrenheit"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "London",
+            "temperature": "72°F",
+            "feels_like": "64°F",
+            "description": "Sunny",
+            "humidity": "56%",
+            "wind_speed": "4 km/h",
+            "summary": "Weather in London: Sunny, 72°F, feels like 64°F."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_multi_clarify_then_compare",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: user wants to compare but needs articles found first. Latest turn needs 2 parallel lookups."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "So sánh hai bài viết này giúp mình."
+        },
+        {
+          "role": "user",
+          "content": "Bài về GPT-5 từ OpenAI và bài về Claude 4 từ Anthropic."
+        },
+        {
+          "role": "user",
+          "content": "Tìm và so sánh 2 bài đó nhé."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "GPT-5 OpenAI"
+            }
+          },
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Claude 4 Anthropic"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "GPT-5 site:openai.com",
+              "topic": "news",
+              "max_results": 1
+            }
+          },
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Claude 4 site:anthropic.com",
+              "topic": "news",
+              "max_results": 1
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "query: expected 'GPT-5 OpenAI', got 'GPT-5 site:openai.com'",
+          "query: expected 'Claude 4 Anthropic', got 'Claude 4 site:anthropic.com'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "GPT-5 site:openai.com",
+            "topic": "news",
+            "max_results": 1
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "GPT-5 site:openai.com",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Codex rate card",
+                "url": "https://help.openai.com/en/articles/20001106-codex-rate-card",
+                "source": "help.openai.com",
+                "summary": "These averages also apply to legacy GPT-5.2, GPT-5.2-Codex, GPT-5.1, GPT-5.1-Codex-Max, GPT-5, GPT-5-Codex, and GPT-5-Codex-Mini.  \n  \nGPT-5.5 Cyber is a part of the OpenAI Daybreak/Trusted Access for Cyber program.\n\n# FAQ\n\n## Why are there two Codex rate cards?\n\nWe have modified our pricing from credits per message to credits per token type consumed. OpenAI supports both the legacy rate card and the updated token-based rate card. The applicable version depends on workspace migration status. [...] | Model | Input tokens | Cached input tokens | Output tokens |\n ---  --- |\n| GPT-5.6 Sol | 125 credits | 12.50 credits | 750 credits |\n| GPT-5.6 Terra | 62.50 credits | 6.250 credits | 375 credits |\n| GPT-5.6 Luna | 25 credits | 2.50 credits | 150 credits |\n| GPT-5.5 | 125 credits | 12.50 credits | 750 credits |\n| GPT-5.5 Cyber | 500 credits | 50 credits | 3,000 credits |\n| GPT-5.4 | 62.50 credits | 6.250 credits | 375 credits |\n| GPT-5.4-Mini | 18.75 credits | 1.875 credits | 113 credits |",
+                "score": 0.47343868
+              }
+            ]
+          }
+        },
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Claude 4 site:anthropic.com",
+            "topic": "news",
+            "max_results": 1
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "Claude 4 site:anthropic.com",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Discovering cryptographic weaknesses with Claude \\ Anthropic",
+                "url": "https://www.anthropic.com/research/discovering-cryptographic-weaknesses",
+                "source": "anthropic.com",
+                "summary": "Mythos Preview achieved these results mostly autonomously and mostly without human intervention. Over the course of a week, one Anthropic researcher worked together with Claude to develop the HAWK attack, and another researcher built a scaffold4 that allowed Claude to fully autonomously discover the AES attack.5 Each of the results cost roughly $100,000 in API cost to develop. After seeing these results, we broadened our search and began to discover other attacks. We discuss some of these [...] Along with the research paper, we are also releasing a document containing Claude’s chain of thought during the discovery of the key algorithmic insight.6 In this session, Claude begins by reviewing what previous agents had discovered, reading the various critiques, and then turns to proposing various new transforms; after proposing and rejecting several ideas, it comes up with the key idea of the Möbius transform. Claude then validates this idea both mathematically and computationally, and",
+                "score": 0.2875782
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_multi_weather_then_temp",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn weather: carry city context, override to Seoul, switch units to fahrenheit on latest turn."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Thời tiết Tokyo hôm nay?"
+        },
+        {
+          "role": "user",
+          "content": "Còn ở Seoul thì sao?"
+        },
+        {
+          "role": "user",
+          "content": "Cho mình nhiệt độ Seoul thôi, tính bằng độ F"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Seoul",
+              "units": "fahrenheit"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Seoul",
+              "units": "fahrenheit"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Seoul",
+            "units": "fahrenheit"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Seoul",
+            "temperature": "87°F",
+            "feels_like": "91°F",
+            "description": "Partly cloudy",
+            "humidity": "71%",
+            "wind_speed": "18 km/h",
+            "summary": "Weather in Seoul: Partly cloudy, 87°F, feels like 91°F."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_multi_search_then_summarize",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: chain lookup→fetch→summarize. Latest turn needs fetch (URL known from context)."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm bài viết về AI agents trên web."
+        },
+        {
+          "role": "user",
+          "content": "Lấy link đầu tiên và đọc nội dung."
+        },
+        {
+          "role": "user",
+          "content": "Tóm tắt nội dung vừa đọc được."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "summarize",
+            "args": {
+              "text": "AI agents are software programs that can perform tasks autonomously or semi-autonomously. They utilize artificial intelligence techniques to analyze data, make decisions, and interact with users or other systems. AI agents can be categorized into various types, including reactive agents, deliberative agents, and hybrid agents. Reactive agents respond to stimuli in their environment without internal models, while deliberative agents use internal representations to plan and make decisions. Hybrid agents combine both approaches for more complex tasks. Applications of AI agents range from virtual assistants and chatbots to autonomous vehicles and robotic systems. The development of AI agents raises ethical considerations, including accountability, transparency, and the potential for bias in decision-making processes. As AI technology continues to evolve, the capabilities and applications of AI agents are expected to expand significantly, impacting various industries and aspects of daily life.",
+              "max_points": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "missing tool call fetch",
+          "extra tool call summarize"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "summarize",
+          "args": {
+            "text": "AI agents are software programs that can perform tasks autonomously or semi-autonomously. They utilize artificial intelligence techniques to analyze data, make decisions, and interact with users or other systems. AI agents can be categorized into various types, including reactive agents, deliberative agents, and hybrid agents. Reactive agents respond to stimuli in their environment without internal models, while deliberative agents use internal representations to plan and make decisions. Hybrid agents combine both approaches for more complex tasks. Applications of AI agents range from virtual assistants and chatbots to autonomous vehicles and robotic systems. The development of AI agents raises ethical considerations, including accountability, transparency, and the potential for bias in decision-making processes. As AI technology continues to evolve, the capabilities and applications of AI agents are expected to expand significantly, impacting various industries and aspects of daily life.",
+            "max_points": 5
+          },
+          "result": {
+            "tool": "extract_key_points",
+            "input_length": 1003,
+            "key_points": [
+              "As AI technology continues to evolve, the capabilities and applications of AI agents are expected to expand significantly, impacting various industries and aspects of daily life.",
+              "The development of AI agents raises ethical considerations, including accountability, transparency, and the potential for bias in decision-making processes.",
+              "Reactive agents respond to stimuli in their environment without internal models, while deliberative agents use internal representations to plan and make decisions.",
+              "AI agents can be categorized into various types, including reactive agents, deliberative agents, and hybrid agents.",
+              "They utilize artificial intelligence techniques to analyze data, make decisions, and interact with users or other systems."
+            ],
+            "keywords": [
+              "accountability",
+              "agents",
+              "analyze",
+              "applications",
+              "approaches",
+              "artificial",
+              "aspects",
+              "assistants",
+              "autonomous",
+              "autonomously"
+            ],
+            "point_count": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_multi_switch_from_social_to_weather",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: user switches from social_search to weather, tool must change accordingly on latest turn."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Mọi người đang nói gì về thời tiết trên Twitter?"
+        },
+        {
+          "role": "user",
+          "content": "Thôi bỏ Twitter, cho mình hỏi thời tiết Đà Nẵng hôm nay."
+        },
+        {
+          "role": "user",
+          "content": "Đúng rồi, thời tiết Đà Nẵng."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Da Nang"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Đà Nẵng"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "city: expected 'Da Nang', got 'Đà Nẵng'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Đà Nẵng"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Đà Nẵng",
+            "temperature": "29°C",
+            "feels_like": "35°C",
+            "description": "Light rain shower",
+            "humidity": "79%",
+            "wind_speed": "19 km/h",
+            "summary": "Weather in Đà Nẵng: Light rain shower, 29°C, feels like 35°C."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_multi_out_of_scope_then_legit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: first turn out-of-scope (refuse), second turn corrects to legit request, third turn confirms. Must call lookup."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Giải phương trình x^2 + 2x + 1 = 0."
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, tìm giúp tin AI hôm nay."
+        },
+        {
+          "role": "user",
+          "content": "Tin AI trong ngày hôm nay nhé."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Employees at the world's biggest AI companies are calling ...",
+                "url": "https://www.cnn.com/2026/07/28/tech/ai-development-tech-employees-open-letter",
+                "source": "cnn.com",
+                "summary": "OpenAI said in a statement to CNN they agree with potentially pacing the development of AI, adding they “hope to contribute to work led by the U.S. government, alongside other labs” on the topic.\n\nOpenAI CEO Sam Altman suggested it may be time to slow down AI development in a podcast interview Tuesday. The OpenAI models that broke out of their test environment are fueling “long term questions” about how AI companies should address this new rate of progress. [...] The letter comes on the heels of major advancements and burgeoning threats from rapidly developing AI systems. OpenAI disclosed last week that two of its test models escaped a lab environment, bypassed its systems to gain access to the open internet and hacked a different company’s internal system. [...] “[T]here is a real risk that capability development rapidly accelerates beyond our ability to understand or control the resulting systems,” the signees said. “To realize AI’s potential, industry, government, and society at large may need the option to buy time to address emerging risks, develop security measures, and strengthen oversight.”",
+                "score": 0.28810367
+              },
+              {
+                "title": "Meta's Zuckerberg warns against curbs on Chinese AI ...",
+                "url": "https://www.reuters.com/world/china/metas-zuckerberg-says-us-should-not-block-chinese-ai-models-ft-reports-2026-07-29",
+                "source": "reuters.com",
+                "summary": "19 mins agoWorld categorySK Hynix's record profit misses forecasts, shares slump 10% despite robust AI chip demand Image 6: SK Hynix at the Nasdaq market in New York \n   4 hours agoLegal categoryTech employees call for US-backed global effort to manage risks of advanced AI Image 7: Illustration shows words \"Artificial Intelligence AI\\ [...] 3 hours agoBusiness categoryEXCLUSIVE  OpenAI's rogue agent compromised a customer at a second tech firm, executive says Image 8: FILE PHOTO: Illustration shows OpenAI logo \n   5 hours agoCommentary categoryTrading Day: A show of resilience Image 9: Traders work on the floor of the NYSE in New York \n   6 hours agoTechnology categoryCoursera backs co-founder Andrew Ng's new AI education firm with $100 million investment , opens new tab",
+                "score": 0.25570402
+              },
+              {
+                "title": "OpenAI's Rogue AI Agent Hacked More Than Just Hugging ...",
+                "url": "https://www.wired.com/story/openais-rogue-ai-agent-hacked-more-than-just-hugging-face",
+                "source": "wired.com",
+                "summary": "“Context bombing” tricks malicious AI agents into shutting down before they can do harm.\n\nDan Goodin, Ars Technica\n\nAI Found a Root Bug in Linux That Everyone Missed for 15 Years\n\nPlus: The Pentagon is training amateurs to become part of its hacker army, a Flock license plate reader error led to cops surrounding a car reviewer, and more.\n\nDell Cameron\n\nA Sneaky Hacking Tool Targeting AI Infrastructure Is Lurking in Victims’ Blind Spots [...] Maxwell Zeff is a senior writer at WIRED covering the business of artificial intelligence. He was previously a senior reporter with TechCrunch, where he broke news on startups and leaders driving the AI boom. Before that, Zeff covered AI policy and content moderation for Gizmodo and wrote some of Bloomberg’s ... Read More\n\nSenior Writer\n\nTopicsOpenAIagentic AIartificial intelligencecyberattackscybersecuritygenerative AI\n\nRead More\n\nOpenAI Models Escaped Containment and Hacked Hugging Face [...] The breach happened when OpenAI was testing one its latest AI models against ExploitGym, a benchmarking framework that scores AI systems on their ability to find and exploit software vulnerabilities. ExploitGym grades an agent on how quickly and effectively it can retrieve secret files from hundreds of different target systems, using prompts that essentially egg the models on to find solutions.",
+                "score": 0.24089554
+              },
+              {
+                "title": "Accenture wins $821M Pentagon AI data platform contract",
+                "url": "https://federalnewsnetwork.com/defense-news/2026/07/accenture-wins-821m-pentagon-ai-data-platform-contract",
+                "source": "federalnewsnetwork.com",
+                "summary": "Discover how federal agencies are applying AI to strengthen cybersecurity, improve operational efficiency and deliver measurable mission outcomes while balancing innovation, governance and human expertise.\n\nThe department said its initial order under the contract is focused on “high-impact, measurable mission outcomes that maximize the benefits of commercial pricing.” An Accenture spokesperson did not respond Tuesday to emailed questions about what that work entails. [...] The platform aims to combine more than 1,500 data sources, both commercial and military, to securely provide intelligence, targeting data and more to frontline troops and their commands, the AI office said, calling it “one of [DoD]’s most vital data platforms for AI exploitation and mission advantage.” [...] “The evolution of Advana’s data platform and application ecosystem over the last six years has led to a complex technical and programmatic architecture that we now must rationalize in order to capitalize on the full potential of AI and support warfighting, intelligence, and enterprise needs with the speed, security, and auditability required,” Deputy Defense Secretary Steve Feinberg said in a January memo.",
+                "score": 0.23064281
+              },
+              {
+                "title": "Mark Zuckerberg Blasts Centralization of A.I. Power",
+                "url": "https://www.nytimes.com/2026/07/28/technology/mark-zuckerberg-meta-ai.html",
+                "source": "nytimes.com",
+                "summary": "Technologists like Dario Amodei, the chief executive of Anthropic, and Sam Altman, the chief executive of OpenAI, have said some of today’s leading A.I. models are too dangerous to be shared and developed without tight controls. But Microsoft, Nvidia, Google and Meta have disagreed, contending that many A.I. models must be developed largely in the open for people to advance the technology and build new businesses. [...] Mark Zuckerberg came out swinging against Anthropic and OpenAI, two of the world’s most valuable artificial intelligence start-ups, saying the way they developed A.I. software could lead to a centralization of power that would narrow people’s access to the transformational technology. [...] In an interview on Tuesday with The New York Times, the 42-year-old chief executive of Meta did not call out Anthropic and OpenAI by name. But he said that if leading research labs wanted to develop A.I. technology in a tightly controlled manner — as Anthropic and OpenAI have done — it would be akin to “abandoning our values” in American tech development and stifle innovation.",
+                "score": 0.2281569
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

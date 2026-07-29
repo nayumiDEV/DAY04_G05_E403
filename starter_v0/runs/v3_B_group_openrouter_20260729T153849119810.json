@@ -1,0 +1,740 @@
+{
+  "run_id": "v3_B_group_openrouter_20260729T153849119810",
+  "version": "v3",
+  "artifact_version": "v3+pc4b59cc47567+t9d0da383669f",
+  "prompt_hash": "c4b59cc4756700548190ca080f02a87489d11f0c5d50a863e53200783959c8b3",
+  "tools_hash": "9d0da383669f9ca5d608a1b69f164af39fa128e6814781af0e85633b55734379",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\nayum\\Works\\learn\\AI20K_Day04\\Day04-C401-Prompt-Engineering-Tool-Calling-Labs-student-k4\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\nayum\\Works\\learn\\AI20K_Day04\\Day04-C401-Prompt-Engineering-Tool-Calling-Labs-student-k4\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "10 team-authored eval cases: 5 single-turn + 5 multi-turn. Tests new tools, edge cases, and scenarios not covered by base eval.",
+  "generated_at": "2026-07-29T15:38:49",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 10,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_weather_query",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Weather query for a specific city → weather tool, not lookup."
+      },
+      "input": "Thời tiết hôm nay ở Hà Nội thế nào?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hanoi"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hanoi"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Hanoi"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Hanoi",
+            "temperature": "32°C",
+            "feels_like": "37°C",
+            "description": "Light rain shower",
+            "humidity": "63%",
+            "wind_speed": "16 km/h",
+            "summary": "Weather in Hanoi: Light rain shower, 32°C, feels like 37°C."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_summarize_long_text",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "User provides long text and asks for summary → summarize tool."
+      },
+      "input": "Tóm tắt đoạn văn sau: AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems. OpenAI and Google both launched new versions of their flagship models. Key developments included improved reasoning capabilities and better tool use.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "summarize",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "summarize",
+            "args": {
+              "text": "AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems. OpenAI and Google both launched new versions of their flagship models. Key developments included improved reasoning capabilities and better tool use.",
+              "max_points": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "summarize",
+          "args": {
+            "text": "AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems. OpenAI and Google both launched new versions of their flagship models. Key developments included improved reasoning capabilities and better tool use.",
+            "max_points": 5
+          },
+          "result": {
+            "tool": "extract_key_points",
+            "input_length": 265,
+            "key_points": [
+              "AI research in 2025 saw rapid advances in multimodal models, with companies releasing increasingly capable systems.",
+              "Key developments included improved reasoning capabilities and better tool use.",
+              "OpenAI and Google both launched new versions of their flagship models."
+            ],
+            "keywords": [
+              "advances",
+              "better",
+              "both",
+              "capabilities",
+              "capable",
+              "companies",
+              "developments",
+              "flagship",
+              "google",
+              "improved"
+            ],
+            "point_count": 3
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_weather_fahrenheit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Weather query with non-default units → weather tool with units=fahrenheit."
+      },
+      "input": "What's the weather in London in Fahrenheit?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "London",
+              "units": "fahrenheit"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "London",
+              "units": "fahrenheit"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "London",
+            "units": "fahrenheit"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "London",
+            "temperature": "72°F",
+            "feels_like": "64°F",
+            "description": "Sunny",
+            "humidity": "56%",
+            "wind_speed": "4 km/h",
+            "summary": "Weather in London: Sunny, 72°F, feels like 64°F."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_weather_no_units",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Weather query without specifying units → weather tool, not lookup. Units default to celsius."
+      },
+      "input": "Check weather in Tokyo please.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Tokyo"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Tokyo"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Tokyo"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Tokyo",
+            "temperature": "28°C",
+            "feels_like": "32°C",
+            "description": "Sunny",
+            "humidity": "76%",
+            "wind_speed": "35 km/h",
+            "summary": "Weather in Tokyo: Sunny, 28°C, feels like 32°C."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G05_summarize_routing",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Summarize routing: user provides text and asks for summary → summarize tool, not lookup."
+      },
+      "input": "Tóm tắt giúp mình: GPT-5 is the latest model from OpenAI with improved reasoning. Claude 4 from Anthropic focuses on safety.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "summarize",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "summarize",
+            "args": {
+              "text": "GPT-5 is the latest model from OpenAI with improved reasoning. Claude 4 from Anthropic focuses on safety.",
+              "max_points": 2
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "summarize",
+          "args": {
+            "text": "GPT-5 is the latest model from OpenAI with improved reasoning. Claude 4 from Anthropic focuses on safety.",
+            "max_points": 2
+          },
+          "result": {
+            "tool": "extract_key_points",
+            "input_length": 105,
+            "key_points": [
+              "GPT-5 is the latest model from OpenAI with improved reasoning.",
+              "Claude 4 from Anthropic focuses on safety."
+            ],
+            "keywords": [
+              "anthropic",
+              "claude",
+              "focuses",
+              "improved",
+              "latest",
+              "model",
+              "openai",
+              "reasoning",
+              "safety"
+            ],
+            "point_count": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_multi_weather_then_temp",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn weather: carry city context, override to Seoul, switch units to fahrenheit on latest turn."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Thời tiết Tokyo hôm nay?"
+        },
+        {
+          "role": "user",
+          "content": "Còn ở Seoul thì sao?"
+        },
+        {
+          "role": "user",
+          "content": "Cho mình nhiệt độ Seoul thôi, tính bằng độ F"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Seoul",
+              "units": "fahrenheit"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Seoul",
+              "units": "fahrenheit"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Seoul",
+            "units": "fahrenheit"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Seoul",
+            "temperature": "87°F",
+            "feels_like": "91°F",
+            "description": "Partly cloudy",
+            "humidity": "71%",
+            "wind_speed": "18 km/h",
+            "summary": "Weather in Seoul: Partly cloudy, 87°F, feels like 91°F."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_multi_switch_from_social_to_weather",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: user switches from social_search to weather, tool must change accordingly on latest turn."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Mọi người đang nói gì về thời tiết trên Twitter?"
+        },
+        {
+          "role": "user",
+          "content": "Thôi bỏ Twitter, cho mình hỏi thời tiết Đà Nẵng hôm nay."
+        },
+        {
+          "role": "user",
+          "content": "Đúng rồi, thời tiết Đà Nẵng."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Da Nang"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Da Nang"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Da Nang"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Da Nang",
+            "temperature": "24°C",
+            "feels_like": "20°C",
+            "description": "Sunny",
+            "humidity": "46%",
+            "wind_speed": "4 km/h",
+            "summary": "Weather in Da Nang: Sunny, 24°C, feels like 20°C."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_multi_out_of_scope_then_legit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: first turn out-of-scope (refuse), second turn corrects to legit request, third turn confirms. Must call lookup."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Giải phương trình x^2 + 2x + 1 = 0."
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, tìm giúp tin AI hôm nay."
+        },
+        {
+          "role": "user",
+          "content": "Tin AI trong ngày hôm nay nhé."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Employees at the world's biggest AI companies are calling ...",
+                "url": "https://www.cnn.com/2026/07/28/tech/ai-development-tech-employees-open-letter",
+                "source": "cnn.com",
+                "summary": "OpenAI said in a statement to CNN they agree with potentially pacing the development of AI, adding they “hope to contribute to work led by the U.S. government, alongside other labs” on the topic.\n\nOpenAI CEO Sam Altman suggested it may be time to slow down AI development in a podcast interview Tuesday. The OpenAI models that broke out of their test environment are fueling “long term questions” about how AI companies should address this new rate of progress. [...] The letter comes on the heels of major advancements and burgeoning threats from rapidly developing AI systems. OpenAI disclosed last week that two of its test models escaped a lab environment, bypassed its systems to gain access to the open internet and hacked a different company’s internal system. [...] “[T]here is a real risk that capability development rapidly accelerates beyond our ability to understand or control the resulting systems,” the signees said. “To realize AI’s potential, industry, government, and society at large may need the option to buy time to address emerging risks, develop security measures, and strengthen oversight.”",
+                "score": 0.28810367
+              },
+              {
+                "title": "Meta's Zuckerberg warns against curbs on Chinese AI ...",
+                "url": "https://www.reuters.com/world/china/metas-zuckerberg-says-us-should-not-block-chinese-ai-models-ft-reports-2026-07-29",
+                "source": "reuters.com",
+                "summary": "19 mins agoWorld categorySK Hynix's record profit misses forecasts, shares slump 10% despite robust AI chip demand Image 6: SK Hynix at the Nasdaq market in New York \n   4 hours agoLegal categoryTech employees call for US-backed global effort to manage risks of advanced AI Image 7: Illustration shows words \"Artificial Intelligence AI\\ [...] 3 hours agoBusiness categoryEXCLUSIVE  OpenAI's rogue agent compromised a customer at a second tech firm, executive says Image 8: FILE PHOTO: Illustration shows OpenAI logo \n   5 hours agoCommentary categoryTrading Day: A show of resilience Image 9: Traders work on the floor of the NYSE in New York \n   6 hours agoTechnology categoryCoursera backs co-founder Andrew Ng's new AI education firm with $100 million investment , opens new tab",
+                "score": 0.25570402
+              },
+              {
+                "title": "OpenAI's Rogue AI Agent Hacked More Than Just Hugging ...",
+                "url": "https://www.wired.com/story/openais-rogue-ai-agent-hacked-more-than-just-hugging-face",
+                "source": "wired.com",
+                "summary": "“Context bombing” tricks malicious AI agents into shutting down before they can do harm.\n\nDan Goodin, Ars Technica\n\nAI Found a Root Bug in Linux That Everyone Missed for 15 Years\n\nPlus: The Pentagon is training amateurs to become part of its hacker army, a Flock license plate reader error led to cops surrounding a car reviewer, and more.\n\nDell Cameron\n\nA Sneaky Hacking Tool Targeting AI Infrastructure Is Lurking in Victims’ Blind Spots [...] Maxwell Zeff is a senior writer at WIRED covering the business of artificial intelligence. He was previously a senior reporter with TechCrunch, where he broke news on startups and leaders driving the AI boom. Before that, Zeff covered AI policy and content moderation for Gizmodo and wrote some of Bloomberg’s ... Read More\n\nSenior Writer\n\nTopicsOpenAIagentic AIartificial intelligencecyberattackscybersecuritygenerative AI\n\nRead More\n\nOpenAI Models Escaped Containment and Hacked Hugging Face [...] The breach happened when OpenAI was testing one its latest AI models against ExploitGym, a benchmarking framework that scores AI systems on their ability to find and exploit software vulnerabilities. ExploitGym grades an agent on how quickly and effectively it can retrieve secret files from hundreds of different target systems, using prompts that essentially egg the models on to find solutions.",
+                "score": 0.24089554
+              },
+              {
+                "title": "Accenture wins $821M Pentagon AI data platform contract",
+                "url": "https://federalnewsnetwork.com/defense-news/2026/07/accenture-wins-821m-pentagon-ai-data-platform-contract",
+                "source": "federalnewsnetwork.com",
+                "summary": "Discover how federal agencies are applying AI to strengthen cybersecurity, improve operational efficiency and deliver measurable mission outcomes while balancing innovation, governance and human expertise.\n\nThe department said its initial order under the contract is focused on “high-impact, measurable mission outcomes that maximize the benefits of commercial pricing.” An Accenture spokesperson did not respond Tuesday to emailed questions about what that work entails. [...] The platform aims to combine more than 1,500 data sources, both commercial and military, to securely provide intelligence, targeting data and more to frontline troops and their commands, the AI office said, calling it “one of [DoD]’s most vital data platforms for AI exploitation and mission advantage.” [...] “The evolution of Advana’s data platform and application ecosystem over the last six years has led to a complex technical and programmatic architecture that we now must rationalize in order to capitalize on the full potential of AI and support warfighting, intelligence, and enterprise needs with the speed, security, and auditability required,” Deputy Defense Secretary Steve Feinberg said in a January memo.",
+                "score": 0.23064281
+              },
+              {
+                "title": "Mark Zuckerberg Blasts Centralization of A.I. Power",
+                "url": "https://www.nytimes.com/2026/07/28/technology/mark-zuckerberg-meta-ai.html",
+                "source": "nytimes.com",
+                "summary": "Technologists like Dario Amodei, the chief executive of Anthropic, and Sam Altman, the chief executive of OpenAI, have said some of today’s leading A.I. models are too dangerous to be shared and developed without tight controls. But Microsoft, Nvidia, Google and Meta have disagreed, contending that many A.I. models must be developed largely in the open for people to advance the technology and build new businesses. [...] Mark Zuckerberg came out swinging against Anthropic and OpenAI, two of the world’s most valuable artificial intelligence start-ups, saying the way they developed A.I. software could lead to a centralization of power that would narrow people’s access to the transformational technology. [...] In an interview on Tuesday with The New York Times, the 42-year-old chief executive of Meta did not call out Anthropic and OpenAI by name. But he said that if leading research labs wanted to develop A.I. technology in a tightly controlled manner — as Anthropic and OpenAI have done — it would be akin to “abandoning our values” in American tech development and stifle innovation.",
+                "score": 0.2281569
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_multi_city_weather",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn weather: carry city context from first turn, switch to Hue, then change units to fahrenheit."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Thời tiết Hà Nội thế nào?"
+        },
+        {
+          "role": "user",
+          "content": "Còn ở Huế thì sao?"
+        },
+        {
+          "role": "user",
+          "content": "Nhiệt độ Huế thôi, độ F"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hue",
+              "units": "fahrenheit"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "Hue",
+              "units": "fahrenheit"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "Hue",
+            "units": "fahrenheit"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "Hue",
+            "temperature": "77°F",
+            "feels_like": "66°F",
+            "description": "Sunny",
+            "humidity": "33%",
+            "wind_speed": "10 km/h",
+            "summary": "Weather in Hue: Sunny, 77°F, feels like 66°F."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_multi_three_cities_weather",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: first turn asks multiple cities, second narrows to London, third adds fahrenheit units."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Thời tiết hôm nay ở các thành phố: Hà Nội, Tokyo, London."
+        },
+        {
+          "role": "user",
+          "content": "Chỉ lấy London thôi."
+        },
+        {
+          "role": "user",
+          "content": "Nhiệt độ London tính bằng độ F nhé."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "London",
+              "units": "fahrenheit"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "weather",
+            "args": {
+              "city": "London",
+              "units": "fahrenheit"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "weather",
+          "args": {
+            "city": "London",
+            "units": "fahrenheit"
+          },
+          "result": {
+            "tool": "get_weather",
+            "city": "London",
+            "temperature": "72°F",
+            "feels_like": "64°F",
+            "description": "Sunny",
+            "humidity": "56%",
+            "wind_speed": "4 km/h",
+            "summary": "Weather in London: Sunny, 72°F, feels like 64°F."
+          }
+        }
+      ]
+    }
+  ]
+}
