@@ -6,8 +6,13 @@
 
 ## Team
 
-- Team: K4-Team
-- Members: [Tên thành viên]
+- Team: K4-G05-E403
+- Members: 
+  - Nguyễn Duy Khương
+  - Nguyễn Huy Hưng
+  - Phạm Hoàng Chương
+  - Lương Quỳnh Chi
+  - Nguyễn Duy Bách
 - Provider/model: openrouter / auto
 
 ---
