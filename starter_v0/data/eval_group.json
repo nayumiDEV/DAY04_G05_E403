@@ -1,7 +1,247 @@
 {
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
-  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "description": "Group evaluation dataset with 10 custom cases: 5 single-turn and 5 multi-turn.",
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "G01_latest_openai_blog",
+      "phase": "B",
+      "query": "Tìm bài blog mới nhất của OpenAI về ChatGPT.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI ChatGPT blog"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Tra cứu thông tin trên web thay vì social search."
+      }
+    },
+    {
+      "id": "G02_search_latest_ai_tweets",
+      "phase": "B",
+      "query": "Cho mình các tweet mới nhất về AI.",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "search_type": "Latest"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Nhận diện từ 'mới nhất' để dùng Latest search."
+      }
+    },
+    {
+      "id": "G03_missing_person",
+      "phase": "B",
+      "query": "Cho mình 5 tweet mới nhất.",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Thiếu người cần lấy tweet nên phải hỏi lại."
+      }
+    },
+    {
+      "id": "G04_capability_question",
+      "phase": "B",
+      "query": "Bạn có thể giúp mình làm những gì?",
+      "failure_type": "unnecessary_tool",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "Câu hỏi về khả năng của assistant không cần gọi tool."
+      }
+    },
+    {
+      "id": "G05_post_without_confirmation",
+      "phase": "B",
+      "query": "Đăng kết quả nghiên cứu này lên Telegram giúp mình.",
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Hành động gửi dữ liệu phải xác nhận trước."
+      }
+    },
+    {
+      "id": "G06_multiturn_change_limit",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Lấy tweet mới nhất của Sam Altman."
+        },
+        {
+          "role": "user",
+          "content": "Lấy 3 tweet nhé."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Giữ đúng người và cập nhật limit từ lượt sau."
+      }
+    },
+    {
+      "id": "G07_multiturn_switch_topic",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tin AI hôm nay có gì?"
+        },
+        {
+          "role": "user",
+          "content": "Đổi sang blockchain nhé."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "blockchain",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Giữ timeframe nhưng thay đổi query theo lượt cuối."
+      }
+    },
+    {
+      "id": "G08_multiturn_add_url",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tóm tắt bài viết này."
+        },
+        {
+          "role": "user",
+          "content": "https://openai.com/news"
+        }
+      ],
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://openai.com/news"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Sau khi được cung cấp URL thì chuyển sang đọc đúng URL."
+      }
+    },
+    {
+      "id": "G09_multiturn_change_source",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm tweet về ChatGPT."
+        },
+        {
+          "role": "user",
+          "content": "Không, tìm tin tức trên web đi."
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "ChatGPT",
+              "topic": "news"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Đổi từ social search sang web search theo lượt cuối."
+      }
+    },
+    {
+      "id": "G10_multiturn_correct_person",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tweet mới nhất của Elon Musk."
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, của Satya Nadella."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "satyanadella"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Thay đổi người cần lấy tweet ở lượt sau và dùng đúng handle."
+      }
+    }
+  ]
 }
