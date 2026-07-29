@@ -19,7 +19,7 @@ tools:
       required: [question]
 
   - name: get_user_tweets
-    description: "Lấy các bài đăng gần đây."
+    description: "Retrieve recent public tweets from a specific X (formerly Twitter) user. Use this tool when the user wants to see or summarize tweets posted by a particular account. Supports limiting the number of tweets returned and includes tweet content, publication date, engagement metrics, and direct links."
     parameters:
       type: object
       properties:
