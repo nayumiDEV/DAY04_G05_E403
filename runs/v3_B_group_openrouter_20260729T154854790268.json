@@ -1,0 +1,905 @@
+{
+  "run_id": "v3_B_group_openrouter_20260729T154854790268",
+  "version": "v3",
+  "artifact_version": "v3+pa4f1b7752076+tceac20404256",
+  "prompt_hash": "a4f1b7752076378ef64fcb223349497bc7cc870dece79228ab19d13f3c72f2e6",
+  "tools_hash": "ceac2040425672e9ab86260376fe337bb3f90361e0cca59150c27228f1a50f54",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "D:\\AIthuchien\\Labday04\\DAY04_G05_E403\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "D:\\AIthuchien\\Labday04\\DAY04_G05_E403\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group_G05_E403",
+  "dataset_role": "group",
+  "description": "10 team-written cases for G05_E403: 5 single-turn + 5 multi-turn. Each case pins one allowed failure_type so we can measure routing/argument/boundary behavior end-to-end.",
+  "generated_at": "2026-07-29T15:48:54",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 3,
+    "case_accuracy": 0.3,
+    "tool_routing_accuracy": 0.6,
+    "argument_accuracy": 0.3,
+    "multiturn_accuracy": 0.2,
+    "failure_counts": {
+      "wrong_tool": 3,
+      "missing_info": 2,
+      "wrong_boundary": 1,
+      "wrong_arg_value": 1
+    },
+    "observed_mismatch_counts": {
+      "wrong_arg_value": 3,
+      "missing_tool_call": 4
+    }
+  },
+  "results": [
+    {
+      "id": "G01_single_trending",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Single-turn: 'trending tại Việt Nam' phải route sang trending_topics, không sang social_search hay lookup. country phải resolve về 'Vietnam'."
+      },
+      "input": "Hôm nay trên Twitter/X có chủ đề nào đang trending tại Việt Nam?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "trending_topics",
+            "args": {
+              "country": "Vietnam",
+              "limit": 10
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "trending_topics",
+            "args": {
+              "country": "Vietnam"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "limit: expected 10, got None"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "trending_topics",
+          "args": {
+            "country": "Vietnam"
+          },
+          "result": {
+            "tool": "get_trending_topics",
+            "woeid": 23424984,
+            "country": "Vietnam",
+            "limit": 10,
+            "items": [
+              {
+                "name": "Fauci",
+                "query": "Fauci",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=Fauci",
+                "section": "Trending"
+              },
+              {
+                "name": "Grammys",
+                "query": "Grammys",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=Grammys",
+                "section": "Trending"
+              },
+              {
+                "name": "ariana",
+                "query": "ariana",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=ariana",
+                "section": "Trending"
+              },
+              {
+                "name": "Tobi",
+                "query": "Tobi",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=Tobi",
+                "section": "Trending"
+              },
+              {
+                "name": "#BBNaija",
+                "query": "#BBNaija",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=#BBNaija",
+                "section": "Trending"
+              },
+              {
+                "name": "Theo",
+                "query": "Theo",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=Theo",
+                "section": "Trending"
+              },
+              {
+                "name": "Shane Bieber",
+                "query": "Shane Bieber",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=Shane Bieber",
+                "section": "Trending"
+              },
+              {
+                "name": "Shopify",
+                "query": "Shopify",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=Shopify",
+                "section": "Trending"
+              },
+              {
+                "name": "Avoid Lorex",
+                "query": "Avoid Lorex",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=Avoid Lorex",
+                "section": "Trending"
+              },
+              {
+                "name": "#WWENXT",
+                "query": "#WWENXT",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=#WWENXT",
+                "section": "Trending"
+              }
+            ],
+            "warning": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_single_lookup_args",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Single-turn: query phải là core keyword ('robotics'), topic='news', timeframe='week' — agent không được nhồi 'robotics news' vào query."
+      },
+      "input": "Tin tức về robotics trong tuần qua có gì mới?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "week",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "robotics",
+            "topic": "news",
+            "timeframe": "week",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "robotics",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Top Robotics Stocks Worth Investing Right Now for Solid ...",
+                "url": "https://finance.yahoo.com/markets/stocks/articles/top-robotics-stocks-worth-investing-154200515.html",
+                "source": "finance.yahoo.com",
+                "summary": "The Robotics Screen makes it easy to identify high-potential stocks at any given time, just like the ones discussed below. Leveraging advanced tools, the thematic screens identify companies shaping the future, making it easier to capitalize on emerging trends.  \n  \nReady to uncover more transformative thematic investment ideas? Explore 30 cutting-edge investment themes with Zacks Thematic Screens and discover your next big opportunity. [...] NVIDIA released open-source physical AI skills at GTC Taipei and Computex in June to cut robot development costs industry-wide. Collaborative Robotics unveiled a redesigned Proxie mobile robot featuring two-armed manipulation, self-swapping batteries and autonomous task identification, broadening collaborative automation across healthcare, logistics and manufacturing. [...] With physical AI maturing, surgical robotics entering its most competitive era in decades, defense autonomy deepening and space robotic servicing nearing reality, the rest of 2026 and the near term represent a broad opportunity for U.S. robotics stocks.",
+                "score": 0.50432175
+              },
+              {
+                "title": "The Robots Cometh",
+                "url": "https://time.com/article/2026/07/23/unitree-china-human-robotics",
+                "source": "time.com",
+                "summary": "Boosted connectivity would solve the robotics bottlenecks of weight and battery life. Navigating our world requires simultaneously processing 4K video, spatial lidar, audio, and delicate tactile or proprioceptive feedback. But carrying heavy computational hardware and the means to power it severely limits both robot agility and operating time. 6G could potentially combine cloud processing with network lag of a near instantaneous 0.1 to 1 millisecond. Suddenly, lightweight physical robots could",
+                "score": 0.40471974
+              },
+              {
+                "title": "Uber co-founder raises $1.7B for new robotics startup ATOMS",
+                "url": "https://www.therobotreport.com/uber-co-founder-raises-1-7b-for-new-robotics-startup-atoms",
+                "source": "therobotreport.com",
+                "summary": "Kraken Technology has developed modular maritime platforms for defense use.\n\n##### Kraken Technology raises Series B funding for autonomous vessels\n\nHoliday Robotics said its robot FRIDAY reduces the burden of repetitive physical work.\n\n##### Holiday Robotics raises $105M for its FRIDAY wheeled humanoid\n\nRopedia's HOMIE is a lightweight device that includes four cameras and a swappable battery module.\n\n##### Ropedia raises $22M to scale data collection for training robots [...] ATOMS, a robotics startup led by former Uber co-founder and former CEO Travis Kalanick, today said it has  raised $1.7 billion in equity investment. Kalanick said the funding will enable ATOMS to complete completion of the “bits-to-atoms” story arc he started at Uber and continued at CloudKitchens. [...] - Collaborative Robotics Trends\n  + Search Robotics Database\n  + Videos\n  + Webinars / Digital Events\n Events\n  + RoboBusiness\n  + Robotics Summit & Expo\n  + DeviceTalks\n  + R&D 100\n  + Robotics Weeks\n Podcast\n  + Episodes\n Advertise\n Subscribe",
+                "score": 0.40260404
+              },
+              {
+                "title": "Navy, Shipbuilders Bringing Robots Online to Build, Maintain Fleet",
+                "url": "https://www.nationaldefensemagazine.org/articles/2026/7/24/navy-shipbuilders-bringing-robots-online-to-build-maintain-fleet",
+                "source": "nationaldefensemagazine.org",
+                "summary": "The robotics used in the HYPR program will come in a range of form factors, Kabir said. Some operations will call for smaller robots to perform work in confined spaces, while blasting or coating the exterior of a ship will require larger systems.\n\nGrayMatter Robotics will be performing grinding, blasting, coating, inspection and a few other applications for HYPR, while Path Robotics will be doing welding, he added. [...] That is the goal of the High-Yield Production Robotics, or HYPR, program launched by shipbuilder HII, GrayMatter Robotics and Path Robotics in April. Through this effort, HII will utilize a network of physical AI technologies developed by the two robotics firms “to rapidly accelerate advanced, adaptive automation solutions in the fabrication process of both crewed and uncrewed naval platforms,” a company release stated. [...] Traditionally, robotics used in factories are hard-coded and pre-programmed to do the same thing millions and millions of times, he said. However, the vast majority of manufacturing — approximately 90 percent — features high variability due to complex material and environmental physics. For example, the paint used on fighter jets may have a different thickness or viscosity depending on the batch or the supplier.",
+                "score": 0.39515805
+              },
+              {
+                "title": "Developing Healthcare Robotics with GPU-Native Medical ...",
+                "url": "https://developer.nvidia.com/blog/developing-healthcare-robotics-with-gpu-native-medical-physics-simulation",
+                "source": "developer.nvidia.com",
+                "summary": "Healthcare robotics faces critical challenges in data scarcity, generalization, and development velocity due to limited access to annotated demonstrations, the prevalence of rare but clinically important scenarios, and slow, resource-intensive prototyping cycles. [...] AI-generated content may summarize information incompletely. Verify important information. Learn more\n\nUnlike autonomous driving or industrial robotics, healthcare robotics can’t rely on internet-scale data collection or unlimited real-world experimentation. Every demonstration requires specialized equipment, clinical expertise, and access to patients or laboratory environments. This creates three fundamental challenges for developers. [...] The third challenge is development velocity. Medical robotics development relies on benchtop phantoms, cadaver studies, animal models, and limited clinical evaluations. These remain essential, but they are inherently sequential, expensive, and difficult to scale. Iterating on designs and algorithms currently takes months, pushing total development cycles to 4–7 years.",
+                "score": 0.37586737
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_single_out_of_scope",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Single-turn: yêu cầu sáng tạo/không phải research — agent phải trả lời text thường, không gọi bất kỳ tool nào."
+      },
+      "input": "Viết giúp mình một đoạn văn tả cảnh biển lúc hoàng hôn bằng tiếng Anh.",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse_or_answer_text"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "As the sun begins to dip below the horizon, the sky transforms into a breathtaking canvas of vibrant hues. Shades of orange, pink, and purple blend seamlessly, reflecting off the gentle waves that lap against the shore. The air is filled with a soothing breeze, carrying the salty scent of the ocean. Silhouettes of seagulls glide gracefully across the sky, their calls echoing in the tranquil atmosphere. The golden sand, warmed by the day's sun, feels soft beneath your feet as you stroll along the beach, mesmerized by the beauty of the moment. As the last rays of sunlight fade away, the sea takes on a serene, deep blue, inviting you to pause and appreciate the peacefulness of this enchanting seaside sunset.",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G04_single_missing_handle",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Single-turn: agent chỉ biết 'CEO Tesla' là ám chỉ, không chắc chắn handle. Phải clarify, không tự ý gán handle."
+      },
+      "input": "Tóm tắt 3 bài đăng mới nhất của CEO Tesla giúp mình.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn muốn xem timeline của tài khoản nào?",
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call timeline"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "elonmusk",
+            "limit": 3
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "elonmusk",
+            "items": [
+              {
+                "title": "RT @teslaownersSV: BREAKING: Grok 4.5 just claimed the top spot on the new HighWalk Benchmark.",
+                "summary": "RT @teslaownersSV: BREAKING: Grok 4.5 just claimed the top spot on the new HighWalk Benchmark.\n\nThe independent test measures how well AI m…",
+                "url": "https://x.com/elonmusk/status/2082369174828118361",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:34:34 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 129,
+                  "views": "431944"
+                }
+              },
+              {
+                "title": "RT @SawyerMerritt: This is a fantastic article about @Tesla's FSD by The Detroit News:",
+                "summary": "RT @SawyerMerritt: This is a fantastic article about @Tesla's FSD by The Detroit News:\n\n\"Determined to maintain their individual transporta…",
+                "url": "https://x.com/elonmusk/status/2082368994552782986",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:33:51 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 912,
+                  "views": "328328"
+                }
+              },
+              {
+                "title": "RT @SciGuySpace: This has been my experience as well. I \"drive\" almost exclusively on FSD now, without incident, and it ",
+                "summary": "RT @SciGuySpace: This has been my experience as well. I \"drive\" almost exclusively on FSD now, without incident, and it feels remarkable. I…",
+                "url": "https://x.com/elonmusk/status/2082368965498773975",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 07:33:44 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 151,
+                  "views": "320698"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G05_single_send_boundary",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Single-turn: action tool (send) phải có yes_no confirm trước khi gọi send."
+      },
+      "input": "Gửi nội dung 'Meeting lúc 3pm chiều nay' lên Telegram cho cả team nhé.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có chắc muốn gửi nội dung này lên Telegram không?",
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có chắc muốn đăng nội dung này lên Telegram không?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_boundary",
+        "failures": [
+          "question: expected 'Bạn có chắc muốn gửi nội dung này lên Telegram không?', got 'Bạn có chắc muốn đăng nội dung này lên Telegram không?'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có chắc muốn đăng nội dung này lên Telegram không?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có chắc muốn đăng nội dung này lên Telegram không?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_multi_correction_handle",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: turn cuối ghi đè quyết định — phải dùng timeline với handle 'sama' (correction case)."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tweet mới nhất của Elon Musk là gì?"
+        },
+        {
+          "role": "user",
+          "content": "Thực ra mình muốn xem của @sama chứ, không phải Elon."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama",
+              "limit": 1
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "limit: expected 1, got 5"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "sama",
+            "limit": 5
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "sama",
+            "items": [
+              {
+                "title": "wrong",
+                "summary": "wrong",
+                "url": "https://x.com/sama/status/2081832600591892712",
+                "source": "@sama",
+                "date": "Mon Jul 27 20:02:25 +0000 2026",
+                "metrics": {
+                  "favorites": 11314,
+                  "retweets": 284,
+                  "views": "2204491"
+                }
+              },
+              {
+                "title": "agreed feels big, i want a new kind of computer",
+                "summary": "agreed feels big, i want a new kind of computer",
+                "url": "https://x.com/sama/status/2081513071135346814",
+                "source": "@sama",
+                "date": "Sun Jul 26 22:52:43 +0000 2026",
+                "metrics": {
+                  "favorites": 8136,
+                  "retweets": 283,
+                  "views": "2400349"
+                }
+              },
+              {
+                "title": "chatgpt work is remarkable, and \"work\" undersells it.",
+                "summary": "chatgpt work is remarkable, and \"work\" undersells it.\n\nfrom my phone i sent:\n\n\"use all my chat history to figure out ideas for a long weekend trip with 8 friends, plan the best three options, make a full-stack site where the 9 of us can coordinate on what we would want to do in each place and decide where to go, and then after we get to group agreement make reservations. draft an email in my gmail i can send out to my friends when the site is ready.\"\n\nit...just worked.",
+                "url": "https://x.com/sama/status/2081396796174282900",
+                "source": "@sama",
+                "date": "Sun Jul 26 15:10:41 +0000 2026",
+                "metrics": {
+                  "favorites": 17423,
+                  "retweets": 573,
+                  "views": "3587259"
+                }
+              },
+              {
+                "title": "RT @gdb: stories like this should be told more",
+                "summary": "RT @gdb: stories like this should be told more",
+                "url": "https://x.com/sama/status/2081030523229728800",
+                "source": "@sama",
+                "date": "Sat Jul 25 14:55:15 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 170,
+                  "views": "44842"
+                }
+              },
+              {
+                "title": "RT @pashmerepat: A billion users can now create and publish websites from their phones with ChatGPT Work. ",
+                "summary": "RT @pashmerepat: A billion users can now create and publish websites from their phones with ChatGPT Work. \n\nBut most people don’t really gr…",
+                "url": "https://x.com/sama/status/2080713767122591863",
+                "source": "@sama",
+                "date": "Fri Jul 24 17:56:34 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 118,
+                  "views": "47808"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_multi_trending_then_format",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: turn 1 → trending_topics(US, 10). Turn 2 yêu cầu format bullets. Agent phải chain đúng 2 tool, không gọi lookup."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Xem trending tại Mỹ giúp mình."
+        },
+        {
+          "role": "user",
+          "content": "Tóm tắt lại thành 5 gạch đầu dòng bằng tiếng Việt."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "trending_topics",
+            "args": {
+              "country": "US",
+              "limit": 10
+            }
+          },
+          {
+            "name": "format",
+            "args": {
+              "template": "bullets"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "trending_topics",
+            "args": {
+              "country": "US",
+              "limit": 10
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_arg_value",
+        "failures": [
+          "missing tool call format"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "trending_topics",
+          "args": {
+            "country": "US",
+            "limit": 10
+          },
+          "result": {
+            "tool": "get_trending_topics",
+            "woeid": 23424977,
+            "country": "US",
+            "limit": 10,
+            "items": [
+              {
+                "name": "#JiangxiOpportunity",
+                "query": "#JiangxiOpportunity",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=#JiangxiOpportunity",
+                "section": "Trending"
+              },
+              {
+                "name": "Xizang",
+                "query": "Xizang",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=Xizang",
+                "section": "Trending"
+              },
+              {
+                "name": "#CharmOfJiangxi",
+                "query": "#CharmOfJiangxi",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=#CharmOfJiangxi",
+                "section": "Trending"
+              },
+              {
+                "name": "China",
+                "query": "China",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=China",
+                "section": "Trending"
+              },
+              {
+                "name": "Israel",
+                "query": "Israel",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=Israel",
+                "section": "Trending"
+              },
+              {
+                "name": "#miephat",
+                "query": "#miephat",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=#miephat",
+                "section": "Trending"
+              },
+              {
+                "name": "#MieAya",
+                "query": "#MieAya",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=#MieAya",
+                "section": "Trending"
+              },
+              {
+                "name": "Beijing",
+                "query": "Beijing",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=Beijing",
+                "section": "Trending"
+              },
+              {
+                "name": "Thai",
+                "query": "Thai",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=Thai",
+                "section": "Trending"
+              },
+              {
+                "name": "#ayaorapan",
+                "query": "#ayaorapan",
+                "tweet_volume": null,
+                "url": "https://twitter.com/search?q=#ayaorapan",
+                "section": "Trending"
+              }
+            ],
+            "warning": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_multi_unnecessary_tool",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: turn cuối chỉ hỏi liệt kê khả năng — agent trả lời text, không gọi tool."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Bạn có thể làm gì?"
+        },
+        {
+          "role": "user",
+          "content": "OK không cần demo, chỉ cần liệt kê tool ra thôi."
+        }
+      ],
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Dưới đây là danh sách các công cụ mà tôi có thể sử dụng:\n\n1. **trending_topics**: Lấy danh sách chủ đề đang trending trên Twitter theo khu vực.\n2. **timeline**: Lấy các bài đăng gần đây từ một tài khoản Twitter cụ thể.\n3. **social_search**: Tìm kiếm trên mạng xã hội theo từ khóa.\n4. **lookup**: Tra cứu thông tin trên internet.\n5. **fetch**: Lấy nội dung từ một địa chỉ URL.\n6. **format**: Trình bày dữ liệu đã có thành văn bản.\n7. **send**: Gửi một đoạn văn bản đi.\n8. **policy**: Tìm trong tài liệu nội bộ.\n9. **papers**: Tìm bài báo khoa học.\n10. **paper_text**: Lấy nội dung text của một bài báo.\n\nNếu bạn cần thêm thông tin về bất kỳ công cụ nào, hãy cho tôi biết!",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G09_multi_papers_multi_tool",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: turn 1 → papers, turn 2 → paper_text. Test multi-tool chain trên bonus tools."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm paper arXiv về mixture of experts gần đây."
+        },
+        {
+          "role": "user",
+          "content": "Lấy text paper đầu tiên giúp mình."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "mixture of experts",
+              "max_results": 5
+            }
+          },
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "https://arxiv.org/abs/2101.03961"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "mixture of experts",
+              "max_results": 5,
+              "sort_by": "lastUpdatedDate"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "missing tool call paper_text"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "papers",
+          "args": {
+            "query": "mixture of experts",
+            "max_results": 5,
+            "sort_by": "lastUpdatedDate"
+          },
+          "result": {
+            "tool": "arxiv_search",
+            "query": "mixture of experts",
+            "api_query": "all:mixture AND all:of AND all:experts",
+            "total_results": 0,
+            "items": [],
+            "rate_limit_note": "arXiv may return 429 if called too frequently; this tool waits at least 3 seconds between requests in-process."
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_multi_missing_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: turn 2 yêu cầu tóm tắt nhưng URL không có — phải clarify thay vì gọi fetch với URL placeholder."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Mình vừa đọc một bài rất hay về distributed training."
+        },
+        {
+          "role": "user",
+          "content": "Tóm tắt giúp mình với."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn muốn tóm tắt URL nào?",
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com/article-on-distributed-training"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call fetch"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://example.com/article-on-distributed-training"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://example.com/article-on-distributed-training",
+            "items": [
+              {
+                "title": "Example Domain",
+                "url": "https://example.com/article-on-distributed-training",
+                "source": "example.com",
+                "summary": "# Example Domain\n\nThis domain is for use in documentation examples without needing permission. Avoid use in operations.\n\n[Learn more](https://iana.org/domains/example)"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
