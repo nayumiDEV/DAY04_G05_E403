@@ -8,7 +8,7 @@
 #   this file  ->  tools/__init__.py (TOOL_FUNCTIONS)  ->  data/eval_base.json + data/eval_research_extension.json
 tools:
   # ---------------- Core tools ----------------
-  - name: ask_user
+  - name: clarify
     description: "Ask the user for required missing information or explicit confirmation. For send/post/publish actions without prior confirmation, use response_type=yes_no."
     parameters:
       type: object
@@ -18,7 +18,7 @@ tools:
         options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
       required: [question]
 
-  - name: get_user_tweets
+  - name: timeline
     description: "Retrieve recent public tweets from a specific X (formerly Twitter) user. Use this tool when the user wants to see or summarize tweets posted by a particular account. Supports limiting the number of tweets returned and includes tweet content, publication date, engagement metrics, and direct links."
     parameters:
       type: object
@@ -27,7 +27,7 @@ tools:
         limit: {type: integer, default: 5, description: "Số lượng"}
       required: [screenname]
 
-  - name: search_tweets
+  - name: social_search
     description: "Search public tweets on X (formerly Twitter) using a keyword or phrase. Use this tool when the user wants to know what people are saying about a topic, company, event, or person. Supports Latest and Top search modes and returns matching tweets with metadata and links."
     parameters:
       type: object
@@ -37,7 +37,7 @@ tools:
         limit: {type: integer, default: 5, description: "Số lượng"}
       required: [query]
 
-  - name: web_search
+  - name: lookup
     description: "Search the web for up-to-date information on a topic or query. Use this tool when the user requests recent news, current events, factual information, or web content that requires online search. Supports topic filtering (e.g., news or general) and optional time ranges such as day, week, or month."
     parameters:
       type: object
@@ -48,7 +48,7 @@ tools:
         max_results: {type: integer, default: 5, description: "Số kết quả"}
       required: [query]
 
-  - name: read_url
+  - name: fetch
     description: "Read and extract the content of a specific web page from its URL. Use this tool when the user provides a link and wants to summarize, analyze, or answer questions about that page. Returns the page title, source, URL, and extracted markdown content"
     parameters:
       type: object
@@ -56,7 +56,7 @@ tools:
         url: {type: string, default: "", description: "Địa chỉ"}
       required: [url]
 
-  - name: render_digest
+  - name: format
     description: "Format a collection of news articles or social posts into a structured markdown digest. Use this tool after gathering information to generate a readable summary in formats such as sections, bullets, brief, thread, or daily newsletter."
     parameters:
       type: object
@@ -78,7 +78,7 @@ tools:
       required: [items, template]
 
   # ---------------- Bonus tools ----------------
-  - name: send_telegram
+  - name: send
     description: "Send text to Telegram only after explicit user confirmation. Never call this tool to request confirmation; use clarify(response_type=yes_no) first."
     parameters:
       type: object
@@ -87,7 +87,7 @@ tools:
         confirmed: {type: boolean, default: false, description: "Cờ xác nhận"}
       required: [text]
 
-  - name: search_company_policy
+  - name: policy
     description: "Search the company's internal policy documents by keyword or policy area. Use this tool when the user asks about company rules, procedures, benefits, compliance requirements, or other internal policies. Returns the most relevant policy sections along with their source, effective date, and supporting facts while filtering out instruction-like or untrusted content."
     parameters:
       type: object
@@ -97,7 +97,7 @@ tools:
         top_k: {type: integer, default: 3, description: "Số mục"}
       required: [query]
 
-  - name: arxiv_search
+  - name: papers
     description: "Search the arXiv repository for research papers by keyword or topic. Use this tool when the user wants to find academic papers related to a research area, method, or concept. Supports limiting the number of results and sorting by relevance, submission date, or last updated date. Returns paper metadata, abstracts, authors, categories, and links to the paper and PDF."
     parameters:
       type: object
@@ -107,7 +107,7 @@ tools:
         sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Sắp xếp"}
       required: [query]
 
-  - name: get_arxiv_paper_text
+  - name: paper_text
     description: "Download and extract text from an arXiv paper. Use this tool when the user provides an arXiv URL or ID and wants to summarize, analyze, review, or answer questions about the paper. The tool downloads the PDF, extracts text from the specified number of pages, and returns an excerpt with metadata."
     parameters:
       type: object
