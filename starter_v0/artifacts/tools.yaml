@@ -9,7 +9,7 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: "Ask the user for required missing information or explicit confirmation. For send/post/publish actions without prior confirmation, use response_type=yes_no."
     parameters:
       type: object
       properties:
@@ -79,7 +79,7 @@ tools:
 
   # ---------------- Bonus tools ----------------
   - name: send
-    description: "Gửi một đoạn văn bản đi."
+    description: "Send text to Telegram only after explicit user confirmation. Never call this tool to request confirmation; use clarify(response_type=yes_no) first."
     parameters:
       type: object
       properties:
