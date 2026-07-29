@@ -8,7 +8,7 @@
 #   this file  ->  tools/__init__.py (TOOL_FUNCTIONS)  ->  data/eval_base.json + data/eval_research_extension.json
 tools:
   # ---------------- Core tools ----------------
-  - name: clarify
+  - name: ask_user
     description: "Ask the user for required missing information or explicit confirmation. For send/post/publish actions without prior confirmation, use response_type=yes_no."
     parameters:
       type: object
@@ -18,7 +18,7 @@ tools:
         options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
       required: [question]
 
-  - name: timeline
+  - name: get_user_tweets
     description: "Lấy các bài đăng gần đây."
     parameters:
       type: object
@@ -27,7 +27,7 @@ tools:
         limit: {type: integer, default: 5, description: "Số lượng"}
       required: [screenname]
 
-  - name: social_search
+  - name: search_tweets
     description: "Tìm trên mạng xã hội."
     parameters:
       type: object
@@ -37,7 +37,7 @@ tools:
         limit: {type: integer, default: 5, description: "Số lượng"}
       required: [query]
 
-  - name: lookup
+  - name: web_search
     description: "Tra cứu thông tin trên internet."
     parameters:
       type: object
@@ -48,7 +48,7 @@ tools:
         max_results: {type: integer, default: 5, description: "Số kết quả"}
       required: [query]
 
-  - name: fetch
+  - name: read_url
     description: "Lấy nội dung từ một địa chỉ."
     parameters:
       type: object
@@ -56,7 +56,7 @@ tools:
         url: {type: string, default: "", description: "Địa chỉ"}
       required: [url]
 
-  - name: format
+  - name: render_digest
     description: "Trình bày dữ liệu đã có thành văn bản."
     parameters:
       type: object
@@ -78,7 +78,7 @@ tools:
       required: [items, template]
 
   # ---------------- Bonus tools ----------------
-  - name: send
+  - name: send_telegram
     description: "Send text to Telegram only after explicit user confirmation. Never call this tool to request confirmation; use clarify(response_type=yes_no) first."
     parameters:
       type: object
@@ -87,7 +87,7 @@ tools:
         confirmed: {type: boolean, default: false, description: "Cờ xác nhận"}
       required: [text]
 
-  - name: policy
+  - name: search_company_policy
     description: "Tìm trong tài liệu nội bộ."
     parameters:
       type: object
@@ -97,7 +97,7 @@ tools:
         top_k: {type: integer, default: 3, description: "Số mục"}
       required: [query]
 
-  - name: papers
+  - name: arxiv_search
     description: "Tìm bài báo khoa học."
     parameters:
       type: object
@@ -107,7 +107,7 @@ tools:
         sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Sắp xếp"}
       required: [query]
 
-  - name: paper_text
+  - name: get_arxiv_paper_text
     description: "Lấy nội dung text của một bài báo."
     parameters:
       type: object
